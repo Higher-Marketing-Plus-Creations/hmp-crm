@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Process Design</title>
+    <style>
+        :root {
+            --bg: #f3f6fb;
+            --panel: #ffffff;
+            --panel-soft: #f8fafc;
+            --line: #dbe4f0;
+            --text: #0f172a;
+            --muted: #5b6b82;
+            --accent: #0f766e;
+            --accent-soft: #ccfbf1;
+            --danger: #be123c;
+            --danger-soft: #ffe4e6;
+            --warning: #a16207;
+            --warning-soft: #fef3c7;
+            --info: #1d4ed8;
+            --info-soft: #dbeafe;
+            --shadow: 0 24px 60px rgba(15, 23, 42, 0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+                linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .page {
+            max-width: 1480px;
+            margin: 0 auto;
+            padding: 28px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #12344d 55%, #0f766e 100%);
+            color: #fff;
+            border-radius: 28px;
+            padding: 34px;
+            box-shadow: var(--shadow);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 12px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: #99f6e4;
+            font-weight: 700;
+        }
+
+        h1, h2, h3, h4, p {
+            margin-top: 0;
+        }
+
+        .hero-grid,
+        .content-grid,
+        .monitor-grid,
+        .workspace-grid,
+        .cards,
+        .ten-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .hero-grid {
+            grid-template-columns: 1.2fr 0.8fr;
+            margin-top: 18px;
+        }
+
+        .content-grid {
+            grid-template-columns: 0.95fr 1.05fr;
+            margin-top: 24px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(219, 228, 240, 0.9);
+            border-radius: 26px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel.soft {
+            background: var(--panel-soft);
+            box-shadow: none;
+        }
+
+        .lead {
+            font-size: 17px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .bullet-list,
+        .flow-list {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .cards {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: 18px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 18px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        .step {
+            position: relative;
+            padding: 18px 18px 18px 72px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: #fff;
+        }
+
+        .step + .step {
+            margin-top: 14px;
+        }
+
+        .step-number {
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge.info {
+            background: var(--info-soft);
+            color: var(--info);
+        }
+
+        .badge.success {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .badge.warning {
+            background: var(--warning-soft);
+            color: var(--warning);
+        }
+
+        .badge.danger {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .ten-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-top: 18px;
+        }
+
+        .mini-card {
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 16px;
+            background: #fff;
+        }
+
+        .crm-shell {
+            background: linear-gradient(180deg, #edf4ff 0%, #f9fbff 100%);
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            padding: 20px;
+        }
+
+        .crm-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            background: #fff;
+            border: 1px solid var(--line);
+        }
+
+        .workspace-grid {
+            grid-template-columns: 280px 1fr;
+        }
+
+        .sidebar,
+        .main-board {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 18px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border-radius: 16px;
+            background: #fff;
+            border: 1px solid var(--line);
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-link.active {
+            background: #0f172a;
+            color: #fff;
+            border-color: #0f172a;
+        }
+
+        .monitor-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            margin-top: 18px;
+        }
+
+        .monitor-card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 15px;
+            min-height: 128px;
+        }
+
+        .monitor-card h4 {
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .monitor-card strong {
+            display: block;
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .process-strip {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 22px;
+            background: linear-gradient(90deg, #e0f2fe 0%, #ecfeff 40%, #ecfccb 100%);
+            border: 1px solid #cfe8f4;
+        }
+
+        .process-strip code {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 1180px) {
+            .hero-grid,
+            .content-grid,
+            .workspace-grid,
+            .monitor-grid,
+            .cards,
+            .ten-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="hero">
+            <span class="eyebrow">Client Wise CRM Planning</span>
+            <div class="hero-grid">
+                <div>
+                    <h1>Lead CRM + Website Monitoring Process Design</h1>
+                    <p class="lead">
+                        Yeh mockup explain karta hai ke CRM kaam kaise karega: pehle client create hoga, phir uske websites connect hongi,
+                        phir forms aur leads usi client ke workspace me isolate hongi, aur uske baad 10 monitoring features same jagah manage honge.
+                    </p>
+                    <div class="cards">
+                        <div class="stat">
+                            <span>Step Base</span>
+                            <strong>6 Main Steps</strong>
+                        </div>
+                        <div class="stat">
+                            <span>Monitoring</span>
+                            <strong>10 Features</strong>
+                        </div>
+                        <div class="stat">
+                            <span>Target Flow</span>
+                            <strong>Client by Client</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel soft">
+                    <h3>Is file ka purpose</h3>
+                    <ol class="flow-list">
+                        <li>Project ka process visually samajhna</li>
+                        <li>Same page par dummy CRM layout dekhna</li>
+                        <li>Development ke next steps decide karna</li>
+                        <li>Client-wise system ka structure finalize karna</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-grid">
+            <section class="panel">
+                <span class="eyebrow" style="color: var(--accent);">Workflow Steps</span>
+                <h2>Step by Step Process</h2>
+
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Create Client</h3>
+                    <p>Admin pehle client banayega. Isme client ka naam, company, email, phone aur internal notes save honge.</p>
+                    <span class="badge info">Base Record</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Connect Website</h3>
+                    <p>Har client ke andar ek ya multiple websites hongi. Har website ko API key, domain whitelist, notification emails aur status milega.</p>
+                    <span class="badge success">Per Website Setup</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Attach Forms</h3>
+                    <p>Website ke contact, quote, estimate ya kisi bhi lead form ko CRM API se connect kiya jayega. Har form us website ke andar track hoga.</p>
+                    <span class="badge info">Form Tracking</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Receive Leads</h3>
+                    <p>Lead submit hone par CRM usko save karega, email notification bhejega, aur email sent ya failed status maintain karega.</p>
+                    <span class="badge warning">Delivery Checks</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3>Run Website Test</h3>
+                    <p>Admin kisi bhi website par <strong>Run Test</strong> click karega. System live site check, SSL check, load time, issue summary aur uptime history save karega.</p>
+                    <span class="badge success">Health Snapshot</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <h3>Review Client Workspace</h3>
+                    <p>Har client ke workspace me uski sari websites ke liye 10 monitoring cards, form counts, latest success, failed forms aur issues alag se nazar aayenge.</p>
+                    <span class="badge danger">No Mixed Data</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <span class="eyebrow" style="color: var(--accent);">Monitoring Features</span>
+                <h2>10 Features on Each Client Workspace</h2>
+                <div class="ten-grid">
+                    <div class="mini-card"><strong>1. Website online/offline</strong><p>Live availability status.</p></div>
+                    <div class="mini-card"><strong>2. Email delivery status</strong><p>Sent, warning, failing, pending.</p></div>
+                    <div class="mini-card"><strong>3. Forms submitted this month</strong><p>Monthly submission count.</p></div>
+                    <div class="mini-card"><strong>4. Last successful form</strong><p>Last sent/working inquiry.</p></div>
+                    <div class="mini-card"><strong>5. Failed form count</strong><p>Submission or delivery failures.</p></div>
+                    <div class="mini-card"><strong>6. Site load time</strong><p>Response time in milliseconds.</p></div>
+                    <div class="mini-card"><strong>7. Current issues</strong><p>SSL, downtime, email or no submissions.</p></div>
+                    <div class="mini-card"><strong>8. Run Test button</strong><p>Manual check trigger.</p></div>
+                    <div class="mini-card"><strong>9. SSL status</strong><p>Valid, expired, expiring soon.</p></div>
+                    <div class="mini-card"><strong>10. Uptime percentage</strong><p>Saved check history se calculate hoga.</p></div>
+                </div>
+
+                <div class="process-strip">
+                    <strong>Suggested real flow:</strong>
+                    <p style="margin: 8px 0 0;">
+                        <code>Create Client</code> -> <code>Connect Website</code> -> <code>Connect Form/API</code> -> <code>Lead Save + Email</code> ->
+                        <code>Run Test</code> -> <code>Client Workspace Review</code>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <section class="panel" style="margin-top: 24px;">
+            <span class="eyebrow" style="color: var(--accent);">Dummy CRM Screen</span>
+            <h2>Same Page Par CRM Mockup</h2>
+            <p style="color: var(--muted); max-width: 900px;">
+                Neeche ek dummy visual layout hai jo show karta hai ke future ya current CRM screen client workspace me kaisi lag sakti hai.
+            </p>
+
+            <div class="crm-shell">
+                <div class="crm-top">
+                    <div>
+                        <h3 style="margin-bottom: 6px;">Client Workspace: Ray's Electrical</h3>
+                        <p style="margin: 0; color: var(--muted);">2 websites connected • 8 forms tracked • 126 leads</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <span class="pill">Create Client</span>
+                        <span class="pill">Connect Website</span>
+                        <span class="pill">Run Test</span>
+                    </div>
+                </div>
+
+                <div class="workspace-grid">
+                    <aside class="sidebar">
+                        <a class="nav-link active" href="#">Dashboard</a>
+                        <a class="nav-link" href="#">Monitoring</a>
+                        <a class="nav-link" href="#">Clients</a>
+                        <a class="nav-link" href="#">Websites</a>
+                        <a class="nav-link" href="#">Forms</a>
+                        <a class="nav-link" href="#">Leads</a>
+                        <a class="nav-link" href="#">Email Logs</a>
+                    </aside>
+
+                    <div class="main-board">
+                        <div class="panel soft" style="margin-bottom: 18px;">
+                            <h3 style="margin-bottom: 8px;">Website: rayselectrical.com</h3>
+                            <p style="margin: 0; color: var(--muted);">
+                                API key connected • Notification emails active • Last test: 5 minutes ago
+                            </p>
+                        </div>
+
+                        <div class="monitor-grid">
+                            <div class="monitor-card">
+                                <h4>Website</h4>
+                                <strong>Online</strong>
+                                <span class="badge success">200 OK</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Email Delivery</h4>
+                                <strong>Healthy</strong>
+                                <span class="badge success">Sent</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>This Month</h4>
+                                <strong>42</strong>
+                                <span class="badge info">Forms</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Last Success</h4>
+                                <strong>Quote Form</strong>
+                                <span>12 mins ago</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Failed Forms</h4>
+                                <strong>3</strong>
+                                <span class="badge warning">Needs review</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Load Time</h4>
+                                <strong>842 ms</strong>
+                                <span>Fast enough</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Current Issues</h4>
+                                <strong style="font-size: 17px;">No SSL issue</strong>
+                                <span>One failed inquiry yesterday</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Run Test</h4>
+                                <strong>Available</strong>
+                                <span class="badge info">Manual Trigger</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>SSL Status</h4>
+                                <strong>Valid</strong>
+                                <span>Expires in 63 days</span>
+                            </div>
+                            <div class="monitor-card">
+                                <h4>Uptime</h4>
+                                <strong>99.21%</strong>
+                                <span>30 day average</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
