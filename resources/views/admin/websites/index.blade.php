@@ -1,11 +1,11 @@
-@extends('layouts.app', ['title' => 'Websites', 'heading' => 'Websites'])
+@extends('layouts.app', ['title' => 'Websites', 'heading' => 'Website Setup'])
 
 @section('content')
     <div class="crm-card p-6">
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h3 class="text-xl font-black text-slate-900">Website Connections</h3>
-                <p class="text-sm text-slate-500">Each website keeps its own API key, forms, leads, and monitoring status inside the correct client workspace.</p>
+                <p class="text-sm text-slate-500">Connect a website once, add recipient emails, then let leads and health checks flow into the client workspace automatically.</p>
             </div>
             <a href="{{ route('admin.websites.create') }}" class="crm-button">Add Website</a>
         </div>
@@ -16,10 +16,9 @@
                     <tr>
                         <th class="pb-3">Website</th>
                         <th class="pb-3">Client</th>
-                        <th class="pb-3">API Key</th>
-                        <th class="pb-3">Forms</th>
-                        <th class="pb-3">Leads</th>
-                        <th class="pb-3">Monitor</th>
+                        <th class="pb-3">Setup</th>
+                        <th class="pb-3">Activity</th>
+                        <th class="pb-3">Health</th>
                         <th class="pb-3">Status</th>
                         <th class="pb-3"></th>
                     </tr>
@@ -34,13 +33,19 @@
                             </td>
                             <td class="py-4">{{ $website->client?->name }}</td>
                             <td class="py-4">
-                                <code class="rounded-xl bg-slate-100 px-3 py-2 text-xs text-slate-700">{{ $website->api_key }}</code>
+                                <p class="font-semibold text-slate-900">{{ $website->notification_emails ? count($website->notification_emails) . ' email(s)' : 'Needs recipients' }}</p>
+                                <p class="text-xs text-slate-500">{{ filled($website->allowed_domains) ? 'Domain rules ready' : 'Using website host' }}</p>
                             </td>
-                            <td class="py-4">{{ $website->forms_count }}</td>
-                            <td class="py-4">{{ $website->leads_count }}</td>
+                            <td class="py-4">
+                                <p class="font-semibold text-slate-900">{{ $website->leads_count }} leads</p>
+                                <p class="text-xs text-slate-500">{{ $website->forms_count }} form source(s) detected</p>
+                            </td>
                             <td class="py-4">
                                 <p class="font-semibold text-slate-900">{{ $check?->website_status ? ucfirst($check->website_status) : 'Not tested' }}</p>
-                                <p class="text-xs text-slate-500">{{ $check?->tested_at?->diffForHumans() ?: 'Run the first test' }}</p>
+                                <p class="text-xs text-slate-500">
+                                    {{ $check?->ssl_status ? ucwords(str_replace('_', ' ', $check->ssl_status)) : 'SSL unknown' }} |
+                                    {{ $check?->tested_at?->diffForHumans() ?: 'Run first test' }}
+                                </p>
                             </td>
                             <td class="py-4">
                                 <span class="{{ $website->status === 'active' ? 'crm-badge-success' : 'crm-badge-danger' }}">{{ $website->status }}</span>

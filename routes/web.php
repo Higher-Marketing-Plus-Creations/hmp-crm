@@ -3,9 +3,7 @@
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ClientWorkspaceController;
 use App\Http\Controllers\Admin\EmailLogController;
-use App\Http\Controllers\Admin\FormController;
 use App\Http\Controllers\Admin\LeadController;
-use App\Http\Controllers\Admin\MonitoringController;
 use App\Http\Controllers\Admin\WebsiteController;
 use App\Http\Controllers\Admin\WebsiteMonitorController;
 use App\Http\Controllers\AuthController;
@@ -23,13 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('monitoring', MonitoringController::class)->name('monitoring.index');
         Route::get('clients/{client}/workspace', [ClientWorkspaceController::class, 'show'])->name('clients.workspace');
         Route::post('websites/{website}/run-test', [WebsiteMonitorController::class, 'store'])->name('websites.run-test');
 
         Route::resource('clients', ClientController::class)->except(['show']);
         Route::resource('websites', WebsiteController::class)->except(['show']);
-        Route::resource('forms', FormController::class)->except(['show']);
 
         Route::get('leads/export', [LeadController::class, 'export'])->name('leads.export');
         Route::post('leads/{lead}/retry-email', [LeadController::class, 'retryEmail'])->name('leads.retry-email');

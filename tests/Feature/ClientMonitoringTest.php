@@ -7,7 +7,10 @@ use App\Models\Lead;
 use App\Models\User;
 use App\Models\Website;
 use App\Services\WebsiteMonitoring\SslCertificateInspector;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Mockery;
 use Tests\TestCase;
@@ -151,5 +154,76 @@ class ClientMonitoringTest extends TestCase
             'failed_form_count' => 0,
             'ssl_status' => 'valid',
         ]);
+    }
+
+    public function test_run_test_retries_local_issuer_ssl_errors_without_marking_site_offline(): void
+    {
+        $user = User::query()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => 'password',
+            'is_admin' => true,
+        ]);
+
+        $client = Client::query()->create([
+            'name' => 'Client Two',
+            'company_name' => 'Client Two LLC',
+        ]);
+
+        $website = Website::query()->create([
+            'client_id' => $client->id,
+            'website_name' => 'SSL Retry Site',
+            'website_url' => 'https://ssl-retry.test',
+            'allowed_domains' => 'ssl-retry.test',
+            'api_key' => 'lead_ssl_retry_key_12345',
+            'notification_emails' => ['sales@ssl-retry.test'],
+            'status' => 'active',
+        ]);
+
+        $attempts = 0;
+
+        Http::fake([
+            'https://ssl-retry.test' => function () use (&$attempts) {
+                $attempts++;
+
+                if ($attempts === 1) {
+                    $guzzleException = new ConnectException(
+                        'cURL error 60: SSL certificate problem: unable to get local issuer certificate',
+                        new Request('GET', 'https://ssl-retry.test')
+                    );
+
+                    throw new ConnectionException($guzzleException->getMessage(), 0, $guzzleException);
+                }
+
+                return Http::response('OK', 200);
+            },
+        ]);
+
+        $inspector = Mockery::mock(SslCertificateInspector::class);
+        $inspector->shouldReceive('inspect')
+            ->once()
+            ->with('https://ssl-retry.test')
+            ->andReturn([
+                'status' => 'valid',
+                'summary' => 'SSL certificate expires on 30 Jun 2026 10:00',
+                'expires_at' => now()->addDays(30),
+            ]);
+
+        $this->app->instance(SslCertificateInspector::class, $inspector);
+
+        $this->actingAs($user)
+            ->post(route('admin.websites.run-test', $website))
+            ->assertRedirect();
+
+        $check = $website->monitorChecks()->latest('id')->first();
+
+        $this->assertSame(2, $attempts);
+        $this->assertNotNull($check);
+        $this->assertSame('online', $check->website_status);
+        $this->assertSame(200, $check->http_status_code);
+        $this->assertNotContains(
+            'Primary SSL verification failed on this monitoring machine, so the availability check retried without local CA validation.',
+            $check->issues ?? []
+        );
     }
 }

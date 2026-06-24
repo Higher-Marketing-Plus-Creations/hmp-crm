@@ -4,6 +4,9 @@ namespace App\Services\WebsiteMonitoring;
 
 use App\Models\Website;
 use App\Models\WebsiteMonitorCheck;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -24,7 +27,7 @@ class WebsiteMonitorRunner
         $requestStartedAt = microtime(true);
 
         try {
-            $response = Http::timeout(15)->get($website->website_url);
+            $response = $this->performWebsiteRequest($website->website_url);
             $siteLoadTimeMs = (int) round((microtime(true) - $requestStartedAt) * 1000);
             $httpStatusCode = $response->status();
             $websiteStatus = 'online';
@@ -103,6 +106,34 @@ class WebsiteMonitorRunner
             'http_status_code' => $httpStatusCode,
             'check_summary' => $this->buildSummary($websiteStatus, $emailDeliveryStatus, $ssl['status']),
             'tested_at' => now(),
+        ]);
+    }
+
+    protected function performWebsiteRequest(string $url): Response
+    {
+        try {
+            return $this->newRequest()->get($url);
+        } catch (ConnectionException $exception) {
+            if (! $this->isLocalIssuerCertificateError($exception)) {
+                throw $exception;
+            }
+
+            return $this->newRequest()
+                ->withoutVerifying()
+                ->get($url);
+        }
+    }
+
+    protected function newRequest(): PendingRequest
+    {
+        return Http::timeout(15);
+    }
+
+    protected function isLocalIssuerCertificateError(ConnectionException $exception): bool
+    {
+        return Str::contains(Str::lower($exception->getMessage()), [
+            'curl error 60',
+            'unable to get local issuer certificate',
         ]);
     }
 

@@ -26,16 +26,21 @@ class WebsiteController extends Controller
     public function create(): View
     {
         return view('admin.websites.form', [
-            'website' => new Website(['status' => 'active']),
+            'website' => new Website([
+                'status' => 'active',
+                'api_key' => Website::generateApiKey(),
+            ]),
             'clients' => Client::query()->orderBy('name')->get(),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        Website::query()->create($this->validatedData($request));
+        $website = Website::query()->create($this->validatedData($request));
 
-        return redirect()->route('admin.websites.index')->with('status', 'Website created successfully.');
+        return redirect()
+            ->route('admin.websites.edit', $website)
+            ->with('status', 'Website created successfully. Integration key, script, and prompt are ready below.');
     }
 
     public function edit(Website $website): View
@@ -50,7 +55,9 @@ class WebsiteController extends Controller
     {
         $website->update($this->validatedData($request, $website));
 
-        return redirect()->route('admin.websites.index')->with('status', 'Website updated successfully.');
+        return redirect()
+            ->route('admin.websites.edit', $website)
+            ->with('status', 'Website updated successfully.');
     }
 
     public function destroy(Website $website): RedirectResponse

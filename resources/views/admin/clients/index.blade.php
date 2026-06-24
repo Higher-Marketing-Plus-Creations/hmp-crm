@@ -4,8 +4,8 @@
     <div class="crm-card p-6">
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h3 class="text-xl font-black text-slate-900">Client Management</h3>
-                <p class="text-sm text-slate-500">Create each client first, then manage their websites and monitoring separately.</p>
+                <h3 class="text-xl font-black text-slate-900">Client Workspaces</h3>
+                <p class="text-sm text-slate-500">Each client should lead to one workspace where you can manage websites, health, and leads without jumping between extra modules.</p>
             </div>
             <a href="{{ route('admin.clients.create') }}" class="crm-button">Add Client</a>
         </div>

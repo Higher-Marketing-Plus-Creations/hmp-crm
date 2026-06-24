@@ -1,34 +1,34 @@
-@extends('layouts.app', ['title' => 'Dashboard', 'heading' => 'Client Monitoring Dashboard'])
+@extends('layouts.app', ['title' => 'Dashboard', 'heading' => 'Daily Overview'])
 
 @section('content')
     <div class="grid gap-5 xl:grid-cols-4">
         <div class="crm-card p-6">
-            <p class="text-sm font-semibold text-slate-500">Total Clients</p>
-            <p class="mt-3 text-4xl font-black text-slate-900">{{ number_format($stats['total_clients']) }}</p>
-        </div>
-        <div class="crm-card p-6">
-            <p class="text-sm font-semibold text-slate-500">Connected Websites</p>
-            <p class="mt-3 text-4xl font-black text-slate-900">{{ number_format($stats['total_websites']) }}</p>
-        </div>
-        <div class="crm-card p-6">
-            <p class="text-sm font-semibold text-slate-500">Total Leads</p>
-            <p class="mt-3 text-4xl font-black text-teal-700">{{ number_format($stats['total_leads']) }}</p>
+            <p class="text-sm font-semibold text-slate-500">Websites Needing Attention</p>
+            <p class="mt-3 text-4xl font-black text-rose-600">{{ number_format($stats['websites_needing_attention']) }}</p>
         </div>
         <div class="crm-card p-6">
             <p class="text-sm font-semibold text-slate-500">Failed Emails</p>
             <p class="mt-3 text-4xl font-black text-rose-600">{{ number_format($stats['failed_emails']) }}</p>
+        </div>
+        <div class="crm-card p-6">
+            <p class="text-sm font-semibold text-slate-500">New Leads Today</p>
+            <p class="mt-3 text-4xl font-black text-teal-700">{{ number_format($stats['new_leads_today']) }}</p>
+        </div>
+        <div class="crm-card p-6">
+            <p class="text-sm font-semibold text-slate-500">Websites Not Tested Yet</p>
+            <p class="mt-3 text-4xl font-black text-slate-900">{{ number_format($stats['untested_websites']) }}</p>
         </div>
     </div>
 
     <div class="crm-card mt-6 p-6">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-                <h3 class="text-xl font-black text-slate-900">Per-Client Workspaces</h3>
-                <p class="text-sm text-slate-500">Data is now organized client-wise so websites, forms, delivery health, and monitoring stay separate.</p>
+                <h3 class="text-xl font-black text-slate-900">Shortest Daily Workflow</h3>
+                <p class="text-sm text-slate-500">Open a client workspace, check unhealthy websites, run a test only where needed, and review new or failed leads from the same admin.</p>
             </div>
             <div class="flex gap-3">
-                <a href="{{ route('admin.monitoring.index') }}" class="crm-button-secondary">Open Monitoring Checklist</a>
                 <a href="{{ route('admin.clients.create') }}" class="crm-button">Create Client</a>
+                <a href="{{ route('admin.websites.create') }}" class="crm-button-secondary">Connect Website</a>
             </div>
         </div>
     </div>
@@ -46,13 +46,26 @@
                             <div>
                                 <h4 class="text-lg font-black text-slate-900">{{ $client->name }}</h4>
                                 <p class="text-sm text-slate-500">{{ $client->company_name ?: 'No company name' }}</p>
-                                <p class="mt-2 text-sm text-slate-600">{{ $client->websites_count }} websites • {{ $client->leads_count }} leads</p>
-                                <div class="mt-4 flex flex-wrap gap-2">
+                                <p class="mt-2 text-sm text-slate-600">{{ $client->websites_count }} websites | {{ $client->leads_count }} leads</p>
+                                <div class="mt-4 space-y-3">
                                     @forelse ($client->websites as $website)
-                                        @php($status = $website->latestMonitorCheck?->website_status)
-                                        <span class="{{ $status === 'online' ? 'crm-badge-success' : ($status === 'offline' ? 'crm-badge-danger' : 'crm-badge-info') }}">
-                                            {{ $website->website_name }}: {{ $status ? ucfirst($status) : 'Not tested' }}
-                                        </span>
+                                        @php($check = $website->latestMonitorCheck)
+                                        <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                                            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                                <div>
+                                                    <p class="font-semibold text-slate-900">{{ $website->website_name }}</p>
+                                                    <p class="text-xs text-slate-500">{{ $website->new_leads_today_count }} new today | {{ $website->failed_leads_count }} failed emails | {{ $check?->tested_at?->diffForHumans() ?: 'Not tested yet' }}</p>
+                                                </div>
+                                                <div class="flex flex-wrap gap-2">
+                                                    <span class="{{ $check?->website_status === 'online' ? 'crm-badge-success' : ($check?->website_status === 'offline' ? 'crm-badge-danger' : 'crm-badge-warning') }}">
+                                                        {{ $check?->website_status ? ucfirst($check->website_status) : 'Needs test' }}
+                                                    </span>
+                                                    <span class="{{ in_array($check?->email_delivery_status, ['healthy', 'pending'], true) ? 'crm-badge-info' : 'crm-badge-warning' }}">
+                                                        {{ $check?->email_delivery_status ? ucwords(str_replace('_', ' ', $check->email_delivery_status)) : 'Email unknown' }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @empty
                                         <span class="crm-badge-warning">No website connected</span>
                                     @endforelse
@@ -67,17 +80,34 @@
             </div>
         </div>
 
-        <div class="crm-card p-6">
-            <h3 class="text-xl font-black text-slate-900">Recent Email Failures</h3>
-            <div class="mt-5 space-y-4">
-                @forelse ($recentEmailFailures as $log)
-                    <div class="rounded-2xl border border-rose-100 bg-rose-50 p-4">
-                        <p class="font-semibold text-rose-800">{{ $log->lead?->website?->client?->name }} • {{ $log->lead?->website_name }}</p>
-                        <p class="mt-1 text-sm text-rose-700">{{ $log->error_message }}</p>
-                    </div>
-                @empty
-                    <p class="text-sm text-slate-500">No recent failures.</p>
-                @endforelse
+        <div class="space-y-6">
+            <div class="crm-card p-6">
+                <h3 class="text-xl font-black text-slate-900">Recent Lead Activity</h3>
+                <div class="mt-5 space-y-4">
+                    @forelse ($recentLeads as $lead)
+                        <a href="{{ route('admin.leads.show', $lead) }}" class="block rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                            <p class="font-semibold text-slate-900">{{ $lead->visitor_name ?: 'Unnamed Lead' }}</p>
+                            <p class="mt-1 text-sm text-slate-600">{{ $lead->website?->client?->name }} | {{ $lead->website_name }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ $lead->created_at?->diffForHumans() }} | {{ ucfirst($lead->email_status) }}</p>
+                        </a>
+                    @empty
+                        <p class="text-sm text-slate-500">No recent leads yet.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="crm-card p-6">
+                <h3 class="text-xl font-black text-slate-900">Recent Email Failures</h3>
+                <div class="mt-5 space-y-4">
+                    @forelse ($recentEmailFailures as $log)
+                        <div class="rounded-2xl border border-rose-100 bg-rose-50 p-4">
+                            <p class="font-semibold text-rose-800">{{ $log->lead?->website?->client?->name }} | {{ $log->lead?->website_name }}</p>
+                            <p class="mt-1 text-sm text-rose-700">{{ $log->error_message }}</p>
+                        </div>
+                    @empty
+                        <p class="text-sm text-slate-500">No recent failures.</p>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>

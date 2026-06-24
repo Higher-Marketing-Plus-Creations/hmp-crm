@@ -19,6 +19,8 @@ class ClientWorkspaceController extends Controller
                     ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()]),
                 'leads as failed_forms_count' => fn ($leadQuery) => $leadQuery
                     ->where('email_status', 'failed'),
+                'leads as new_leads_today_count' => fn ($leadQuery) => $leadQuery
+                    ->whereDate('created_at', today()),
             ])->orderBy('website_name'),
         ]);
 
@@ -39,10 +41,15 @@ class ClientWorkspaceController extends Controller
             'websites' => $websites,
             'clientStats' => [
                 'total_websites' => $websites->count(),
-                'total_forms' => $websites->sum('forms_count'),
                 'forms_this_month' => $websites->sum('forms_submitted_this_month_count'),
                 'failed_forms' => $websites->sum('failed_forms_count'),
+                'new_leads_today' => $websites->sum('new_leads_today_count'),
             ],
+            'recentLeads' => $client->leads()
+                ->with('website')
+                ->latest()
+                ->limit(8)
+                ->get(),
         ]);
     }
 }

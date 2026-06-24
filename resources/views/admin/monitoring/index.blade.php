@@ -39,7 +39,7 @@
                                 <div>
                                     <p class="font-semibold text-slate-900">{{ $client->name }}</p>
                                     <p class="text-xs text-slate-500">{{ $client->company_name ?: 'No company name' }}</p>
-                                    <p class="mt-2 text-xs text-slate-500">{{ $client->websites_count }} websites • {{ $client->leads_count }} leads</p>
+                                    <p class="mt-2 text-xs text-slate-500">{{ $client->websites_count }} websites | {{ $client->leads_count }} leads</p>
                                 </div>
                                 <a href="{{ route('admin.clients.workspace', $client) }}" class="crm-button-secondary">Open</a>
                             </div>

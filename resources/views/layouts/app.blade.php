@@ -13,16 +13,14 @@
         <aside class="crm-card hidden w-80 shrink-0 p-6 lg:block">
             <div class="mb-10">
                 <p class="text-xs font-bold uppercase tracking-[0.3em] text-teal-600">Lead CRM</p>
-                <h1 class="mt-3 text-2xl font-black text-slate-900">Admin Control Center</h1>
-                <p class="mt-2 text-sm text-slate-500">Manage intake, client workspaces, website health, and delivery monitoring from one place.</p>
+                <h1 class="mt-3 text-2xl font-black text-slate-900">Client Workspace CRM</h1>
+                <p class="mt-2 text-sm text-slate-500">Focus on the clients, websites, leads, and delivery issues that need action.</p>
             </div>
 
             <nav class="space-y-2">
                 <a href="{{ route('dashboard') }}" class="crm-sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                <a href="{{ route('admin.monitoring.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.monitoring.*') ? 'active' : '' }}">Monitoring</a>
                 <a href="{{ route('admin.clients.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">Clients</a>
                 <a href="{{ route('admin.websites.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.websites.*') ? 'active' : '' }}">Websites</a>
-                <a href="{{ route('admin.forms.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.forms.*') ? 'active' : '' }}">Forms</a>
                 <a href="{{ route('admin.leads.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">Leads</a>
                 <a href="{{ route('admin.email-logs.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.email-logs.*') ? 'active' : '' }}">Email Logs</a>
             </nav>
