@@ -67,6 +67,11 @@ class Website extends Model
         return $this->hasMany(WebsiteMonitorCheck::class);
     }
 
+    public function monitorAlerts(): HasMany
+    {
+        return $this->hasMany(WebsiteMonitorAlert::class);
+    }
+
     public function latestMonitorCheck(): HasOne
     {
         return $this->hasOne(WebsiteMonitorCheck::class)->latestOfMany('tested_at');

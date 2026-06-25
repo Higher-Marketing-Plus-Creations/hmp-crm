@@ -16,6 +16,7 @@ class SslCertificateInspector
                 'status' => 'unknown',
                 'summary' => 'Website host is missing from the configured URL.',
                 'expires_at' => null,
+                'days_left' => null,
             ];
         }
 
@@ -24,6 +25,7 @@ class SslCertificateInspector
                 'status' => 'not_secure',
                 'summary' => 'Website is not using HTTPS.',
                 'expires_at' => null,
+                'days_left' => null,
             ];
         }
 
@@ -49,6 +51,7 @@ class SslCertificateInspector
                 'status' => 'unknown',
                 'summary' => 'Unable to read the SSL certificate: ' . trim($errorMessage ?: ('Error ' . $errorNumber)),
                 'expires_at' => null,
+                'days_left' => null,
             ];
         }
 
@@ -60,6 +63,7 @@ class SslCertificateInspector
                 'status' => 'unknown',
                 'summary' => 'SSL certificate details were not returned by the website.',
                 'expires_at' => null,
+                'days_left' => null,
             ];
         }
 
@@ -71,10 +75,12 @@ class SslCertificateInspector
                 'status' => 'unknown',
                 'summary' => 'SSL certificate expiry could not be determined.',
                 'expires_at' => null,
+                'days_left' => null,
             ];
         }
 
         $expiresAt = CarbonImmutable::createFromTimestampUTC((int) $validTo);
+        $daysLeft = now()->diffInDays($expiresAt, false);
 
         if ($expiresAt->isPast()) {
             $status = 'expired';
@@ -88,6 +94,7 @@ class SslCertificateInspector
             'status' => $status,
             'summary' => 'SSL certificate expires on ' . $expiresAt->setTimezone(config('app.timezone'))->format('d M Y H:i'),
             'expires_at' => $expiresAt,
+            'days_left' => $daysLeft,
         ];
     }
 }

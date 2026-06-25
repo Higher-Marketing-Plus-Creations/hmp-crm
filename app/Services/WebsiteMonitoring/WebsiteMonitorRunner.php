@@ -8,21 +8,30 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class WebsiteMonitorRunner
 {
     public function __construct(
-        protected SslCertificateInspector $sslInspector
+        protected SslCertificateInspector $sslInspector,
+        protected WebsiteMonitoringAlertManager $alertManager
     ) {
     }
 
-    public function run(Website $website): WebsiteMonitorCheck
+    public function run(Website $website, string $trigger = 'manual'): WebsiteMonitorCheck
     {
         $issues = [];
         $httpStatusCode = null;
         $websiteStatus = 'offline';
         $siteLoadTimeMs = null;
+        $lastError = null;
+
+        Log::info('Website monitoring check started.', [
+            'website_id' => $website->id,
+            'website_url' => $website->website_url,
+            'trigger' => $trigger,
+        ]);
 
         $requestStartedAt = microtime(true);
 
@@ -40,6 +49,7 @@ class WebsiteMonitorRunner
             }
         } catch (\Throwable $exception) {
             $siteLoadTimeMs = (int) round((microtime(true) - $requestStartedAt) * 1000);
+            $lastError = Str::limit($exception->getMessage(), 500, '');
             $issues[] = 'Website check failed: ' . Str::limit($exception->getMessage(), 160, '');
         }
 
@@ -92,21 +102,47 @@ class WebsiteMonitorRunner
 
         $uptimePercentage = $this->resolveUptimePercentage($website, $websiteStatus);
 
-        return $website->monitorChecks()->create([
+        $check = $website->monitorChecks()->create([
             'website_status' => $websiteStatus,
+            'last_checked_at' => now(),
             'email_delivery_status' => $emailDeliveryStatus,
             'forms_submitted_this_month' => $formsSubmittedThisMonth,
             'last_successful_form_submitted_at' => $lastSuccessfulLead?->created_at,
             'failed_form_count' => $failedFormCount,
+            'response_time_ms' => $siteLoadTimeMs,
             'site_load_time_ms' => $siteLoadTimeMs,
             'issues' => array_values(array_unique(array_filter($issues))),
-            'run_test_status' => 'completed',
-            'ssl_status' => $ssl['status'],
+            'run_test_status' => $trigger,
+            'ssl_status' => data_get($ssl, 'status', 'unknown'),
+            'ssl_expiry_date' => data_get($ssl, 'expires_at'),
+            'ssl_days_left' => data_get($ssl, 'days_left'),
             'uptime_percentage' => $uptimePercentage,
             'http_status_code' => $httpStatusCode,
             'check_summary' => $this->buildSummary($websiteStatus, $emailDeliveryStatus, $ssl['status']),
+            'last_error' => $lastError,
             'tested_at' => now(),
         ]);
+
+        $this->alertManager->process($website, $check);
+
+        Log::info('Website monitoring check completed.', [
+            'website_id' => $website->id,
+            'website_monitor_check_id' => $check->id,
+            'website_status' => $check->website_status,
+            'ssl_status' => $check->ssl_status,
+            'issues_count' => count($check->issues ?? []),
+            'trigger' => $trigger,
+        ]);
+
+        if (($check->issues ?? []) !== []) {
+            Log::warning('Website monitoring issues detected.', [
+                'website_id' => $website->id,
+                'website_monitor_check_id' => $check->id,
+                'issues' => $check->issues,
+            ]);
+        }
+
+        return $check;
     }
 
     protected function performWebsiteRequest(string $url): Response
@@ -189,3 +225,5 @@ class WebsiteMonitorRunner
         );
     }
 }
+
+

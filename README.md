@@ -38,6 +38,7 @@ This project is now structured as a client-wise lead CRM and website monitoring 
 - Exports filtered leads to CSV
 - Includes a reusable frontend JavaScript snippet for any website
 - Saves website monitoring snapshots with SSL, uptime, load time, and issue summaries
+- Runs automatic monitoring every 5 minutes through Laravel scheduler when server cron is configured
 
 ## CRM structure
 
@@ -46,7 +47,7 @@ This project is now structured as a client-wise lead CRM and website monitoring 
 3. Add notification emails and allowed domains on the website
 4. Connect forms from the website to the CRM API
 5. Open the client workspace to review form counts, last success, failures, SSL, uptime, and current issues
-6. Use `Run Test` whenever you want a fresh website health snapshot
+6. Use `Run Test` whenever you want a fresh website health snapshot, or let the scheduler run automatically
 
 ## Full setup steps
 
@@ -137,19 +138,36 @@ php artisan serve
 php artisan queue:work
 ```
 
+11. For automatic monitoring in production, run Laravel scheduler every minute:
+
+```bash
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+On Windows Task Scheduler, run this every minute:
+
+```powershell
+php C:\path\to\project\artisan schedule:run
+```
+
 ## Monitoring model
 
 Each website monitoring test stores a snapshot with:
 
 - website online/offline result
+- last checked time
 - email delivery health status
 - forms submitted this month
 - latest successful form date
 - failed form count
 - site load time in milliseconds
+- response time in milliseconds
 - current issue list
 - SSL certificate status
+- SSL expiry date
+- SSL days left
 - uptime percentage based on saved checks
+- last error message
 - test run timestamp
 
 ## API request example
@@ -209,10 +227,11 @@ Content-Type: application/json
 4. Result is stored in `email_logs`
 5. `leads.email_status` becomes `sent` or `failed`
 6. Admin can open a failed lead and click `Retry Email`
+7. Website monitoring alerts are also queued and duplicate alerts are suppressed until status changes
 
 ## Notes
 
 - This project handles lead management, client workspaces, and website monitoring.
 - Payment processing is not part of this CRM flow.
 - For production, change default admin credentials immediately.
-- The monitoring pages are intended to be expanded further if you want scheduled cron-based checks later.
+- Automatic monitoring depends on both `php artisan schedule:run` and a running queue worker in production.
