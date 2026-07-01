@@ -29,12 +29,26 @@
         target.style.color = success ? '#047857' : '#b91c1c';
     }
 
+    function markTrackerLoaded(selector) {
+        document.documentElement.setAttribute('data-hmp-crm-tracker', 'active');
+        document.documentElement.setAttribute('data-hmp-crm-selector', selector);
+        window.__HMP_CRM_TRACKER__ = {
+            loaded: true,
+            selector: selector,
+            loadedAt: new Date().toISOString()
+        };
+    }
+
     window.LeadFormTracker = {
         init: function (config) {
             var selector = config.selector || 'form[data-lead-form]';
             var forms = document.querySelectorAll(selector);
 
+            markTrackerLoaded(selector);
+
             forms.forEach(function (form) {
+                form.setAttribute('data-hmp-crm-bound', 'true');
+
                 form.addEventListener('submit', function (event) {
                     event.preventDefault();
 

@@ -32,7 +32,16 @@ class WebsiteMonitoringAutomationTest extends TestCase
         ]);
 
         Http::fake([
-            'https://demo-site.test' => Http::response('OK', 200),
+            'https://demo-site.test' => Http::response(
+                '<html><head>'
+                . '<meta name="google-site-verification" content="demo-verification" />'
+                . '<script async src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"></script>'
+                . '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("config","G-TEST1234");</script>'
+                . '<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});})(window,document,"script","dataLayer","GTM-TEST1");</script>'
+                . '<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/test";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "test");</script>'
+                . '</head><body>OK</body></html>',
+                200
+            ),
         ]);
 
         $inspector = Mockery::mock(SslCertificateInspector::class);
@@ -62,6 +71,14 @@ class WebsiteMonitoringAutomationTest extends TestCase
         $this->assertSame(35, $check->ssl_days_left);
         $this->assertNotNull($check->last_checked_at);
         $this->assertNotNull($check->response_time_ms);
+        $this->assertTrue($check->google_analytics_detected);
+        $this->assertTrue($check->google_tag_manager_detected);
+        $this->assertTrue($check->google_search_console_detected);
+        $this->assertTrue($check->microsoft_tracking_detected);
+        $this->assertContains('GA4 measurement ID', $check->tracking_detection_details['google_analytics']);
+        $this->assertContains('GTM container ID', $check->tracking_detection_details['google_tag_manager']);
+        $this->assertContains('google-site-verification meta tag', $check->tracking_detection_details['google_search_console']);
+        $this->assertContains('Microsoft Clarity tag', $check->tracking_detection_details['microsoft_tracking']);
 
         Queue::assertNothingPushed();
     }

@@ -15,7 +15,8 @@ class WebsiteMonitorRunner
 {
     public function __construct(
         protected SslCertificateInspector $sslInspector,
-        protected WebsiteMonitoringAlertManager $alertManager
+        protected WebsiteMonitoringAlertManager $alertManager,
+        protected TrackingScriptDetector $trackingScriptDetector
     ) {
     }
 
@@ -26,6 +27,18 @@ class WebsiteMonitorRunner
         $websiteStatus = 'offline';
         $siteLoadTimeMs = null;
         $lastError = null;
+        $trackingDetection = [
+            'google_analytics_detected' => false,
+            'google_tag_manager_detected' => false,
+            'google_search_console_detected' => false,
+            'microsoft_tracking_detected' => false,
+            'tracking_detection_details' => [
+                'google_analytics' => [],
+                'google_tag_manager' => [],
+                'google_search_console' => [],
+                'microsoft_tracking' => [],
+            ],
+        ];
 
         Log::info('Website monitoring check started.', [
             'website_id' => $website->id,
@@ -40,6 +53,7 @@ class WebsiteMonitorRunner
             $siteLoadTimeMs = (int) round((microtime(true) - $requestStartedAt) * 1000);
             $httpStatusCode = $response->status();
             $websiteStatus = 'online';
+            $trackingDetection = $this->trackingScriptDetector->detect($response->body());
 
             if ($response->serverError()) {
                 $websiteStatus = 'offline';
@@ -106,12 +120,17 @@ class WebsiteMonitorRunner
             'website_status' => $websiteStatus,
             'last_checked_at' => now(),
             'email_delivery_status' => $emailDeliveryStatus,
+            'google_analytics_detected' => $trackingDetection['google_analytics_detected'],
+            'google_tag_manager_detected' => $trackingDetection['google_tag_manager_detected'],
+            'google_search_console_detected' => $trackingDetection['google_search_console_detected'],
+            'microsoft_tracking_detected' => $trackingDetection['microsoft_tracking_detected'],
             'forms_submitted_this_month' => $formsSubmittedThisMonth,
             'last_successful_form_submitted_at' => $lastSuccessfulLead?->created_at,
             'failed_form_count' => $failedFormCount,
             'response_time_ms' => $siteLoadTimeMs,
             'site_load_time_ms' => $siteLoadTimeMs,
             'issues' => array_values(array_unique(array_filter($issues))),
+            'tracking_detection_details' => $trackingDetection['tracking_detection_details'],
             'run_test_status' => $trigger,
             'ssl_status' => data_get($ssl, 'status', 'unknown'),
             'ssl_expiry_date' => data_get($ssl, 'expires_at'),
@@ -225,5 +244,3 @@ class WebsiteMonitorRunner
         );
     }
 }
-
-

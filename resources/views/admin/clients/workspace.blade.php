@@ -24,7 +24,7 @@
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
                 <h3 class="text-xl font-black text-slate-900">Website Health And Leads</h3>
-                <p class="text-sm text-slate-500">Use this page as the main daily workspace for this client: review health, run tests, and jump into leads only when something needs attention.</p>
+                <p class="text-sm text-slate-500">Use this page as the main daily workspace for this client: review health, run tests, verify tracking scripts, and jump into leads only when something needs attention.</p>
             </div>
             <div class="flex gap-3">
                 <a href="{{ route('admin.websites.create') }}" class="crm-button">Connect Website</a>
@@ -81,11 +81,41 @@
                     <div class="mt-4 rounded-2xl bg-slate-50 p-4">
                         <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Tracking Detection</p>
+                                <div class="mt-3 grid gap-2 text-sm text-slate-700 md:grid-cols-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full {{ $check && $check->google_analytics_detected ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">{!! $check && $check->google_analytics_detected ? '&#10003;' : '&#10005;' !!}</span>
+                                        <span>Google Analytics</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full {{ $check && $check->google_tag_manager_detected ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">{!! $check && $check->google_tag_manager_detected ? '&#10003;' : '&#10005;' !!}</span>
+                                        <span>Google Tag Manager</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full {{ $check && $check->google_search_console_detected ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">{!! $check && $check->google_search_console_detected ? '&#10003;' : '&#10005;' !!}</span>
+                                        <span>Search Console Verification</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full {{ $check && $check->microsoft_tracking_detected ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">{!! $check && $check->microsoft_tracking_detected ? '&#10003;' : '&#10005;' !!}</span>
+                                        <span>Microsoft Tracking</span>
+                                    </div>
+                                </div>
+                                <p class="mt-3 text-xs text-slate-500">{{ $check ? 'Run Test scans the latest rendered HTML for gtag, GTM, verification meta tags, Clarity, and Bing markers.' : 'Run the first test to scan tracking markers.' }}</p>
+                            </div>
+                            <div class="text-sm text-slate-500">
+                                Last test: {{ $check?->tested_at?->diffForHumans() ?: 'Ready to run' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 rounded-2xl bg-slate-50 p-4">
+                        <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                            <div>
                                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Current Issues</p>
                                 <p class="mt-3 text-sm font-semibold text-slate-700">{{ $check && filled($check->issues) ? implode(' ', $check->issues) : 'No active issues detected.' }}</p>
                             </div>
                             <div class="text-sm text-slate-500">
-                                Last test: {{ $check?->tested_at?->diffForHumans() ?: 'Ready to run' }}
+                                {{ $check?->tracking_detection_details ? 'Tracking markers saved with latest snapshot' : 'Tracking details will appear after Run Test' }}
                             </div>
                         </div>
                     </div>
@@ -105,7 +135,7 @@
             @empty
                 <div class="crm-card p-8 text-center">
                     <h3 class="text-xl font-black text-slate-900">No website connected yet</h3>
-                    <p class="mt-2 text-sm text-slate-500">Create the client first, then connect a website to start lead capture and health tracking in one workspace.</p>
+                    <p class="mt-2 text-sm text-slate-500">Create the client first, then connect a website to start lead capture, health tracking, and script detection in one workspace.</p>
                 </div>
             @endforelse
         </div>
@@ -126,4 +156,3 @@
         </div>
     </div>
 @endsection
-
