@@ -62,6 +62,11 @@ class Website extends Model
         return $this->hasMany(Lead::class);
     }
 
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+
     public function monitorChecks(): HasMany
     {
         return $this->hasMany(WebsiteMonitorCheck::class);

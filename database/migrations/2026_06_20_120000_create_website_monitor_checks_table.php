@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('uptime_percentage', 5, 2)->nullable();
             $table->unsignedSmallInteger('http_status_code')->nullable();
             $table->text('check_summary')->nullable();
-            $table->timestamp('tested_at');
+            $table->timestamp('tested_at')->nullable();
             $table->timestamps();
 
             $table->index(['website_id', 'tested_at']);

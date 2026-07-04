@@ -149,4 +149,59 @@ class LeadSubmissionController extends Controller
             return false;
         }
     }
+
+    public function  saveLead(Request $request): JsonResponse
+    {
+        $data = $request->all();
+
+        // Validate the incoming data
+        // $validatedData = $request->validate([
+        //     'website_name' => 'nullable|string|max:255',
+        //     'page_url' => 'nullable|url|max:2048',
+        //     'form_name' => 'nullable|string|max:255',
+        //     'form_identifier' => 'nullable|string|max:255',
+        //     'fields' => 'nullable|array|min:1',
+        //     'fields.*' => 'nullable',
+        //     'honeypot' => 'nullable|string|max:255',
+        //     'recaptcha_token' => 'nullable|string',
+        //     // 'status' => ['nullable', Rule::in(['new', 'read', 'spam'])],
+        // ]);
+
+        $website = Website::query()->where('api_key', $request->header('X-API-KEY'))->firstOrFail();
+        $form = LeadForm::query()->firstOrCreate(
+            [
+                'website_id' => $website->id,
+                'form_identifier' => $data['form_identifier'] ?? null,
+                'form_name' => $data['form_name'],
+                'page_url' => $data['page_url'],
+            ],
+            [
+                'status' => 'active',
+            ]
+        );
+        $form_fields=$data['form_fields'] ?? [];
+ $lead = Lead::query()->create([
+            'website_id' => $website->id,
+            'form_id' => $form->id,
+            'website_name' => $data['website_name'],
+            'page_url' => $data['page_url'],
+            'form_name' => $data['form_name'],
+            'visitor_name' => $this->extractField($form_fields, ['name', 'full_name', 'fullname']),
+            'visitor_email' => $this->extractField($form_fields, ['email', 'email_address']),
+            'visitor_phone' => $this->extractField($form_fields, ['phone', 'mobile', 'telephone']),
+            'message' => $this->extractField($form_fields, ['message', 'comment', 'comments', 'notes', 'inquiry']),
+            'form_data' => $form_fields,
+            'ip_address' => $request->ip(),
+            'user_agent' => Str::limit((string) $request->userAgent(), 65535, ''),
+            'referrer' => $request->headers->get('referer'),
+            // 'status' => $isSpam ? 'spam' : ($data['status'] ?? 'new'),
+            // 'email_status' => $isSpam ? 'failed' : 'pending',
+        ]);
+        // Process the lead submission logic here (e.g., save to database, send notifications, etc.)
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lead submitted successfully.',
+        ], 201);
+    }
 }

@@ -15,11 +15,11 @@ class SubmitLeadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'website_name' => ['required', 'string', 'max:255'],
-            'page_url' => ['required', 'url', 'max:2048'],
-            'form_name' => ['required', 'string', 'max:255'],
+            'website_name' => ['nullable', 'string', 'max:255'],
+            'page_url' => ['nullable', 'url', 'max:2048'],
+            'form_name' => ['nullable', 'string', 'max:255'],
             'form_identifier' => ['nullable', 'string', 'max:255'],
-            'fields' => ['required', 'array', 'min:1'],
+            'fields' => ['nullable', 'array', 'min:1'],
             'fields.*' => ['nullable'],
             'honeypot' => ['nullable', 'string', 'max:255'],
             'recaptcha_token' => ['nullable', 'string'],

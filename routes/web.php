@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ClientWorkspaceController;
 use App\Http\Controllers\Admin\EmailLogController;
 use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\WebsiteController;
 use App\Http\Controllers\Admin\WebsiteMonitorController;
 use App\Http\Controllers\AuthController;
@@ -26,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('clients', ClientController::class)->except(['show']);
         Route::resource('websites', WebsiteController::class)->except(['show']);
+        Route::resource('posts', PostController::class)->except(['show']);
 
         Route::get('leads/export', [LeadController::class, 'export'])->name('leads.export');
         Route::post('leads/{lead}/retry-email', [LeadController::class, 'retryEmail'])->name('leads.retry-email');

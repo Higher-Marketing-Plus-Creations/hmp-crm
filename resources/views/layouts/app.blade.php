@@ -7,6 +7,8 @@
     @if (! app()->environment('testing') && (file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json'))))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
+
+    @yield('styles');
 </head>
 <body class="crm-shell">
     <div class="mx-auto flex min-h-screen max-w-[1700px] gap-6 px-4 py-6 lg:px-6">
@@ -21,6 +23,7 @@
                 <a href="{{ route('dashboard') }}" class="crm-sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('admin.clients.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">Clients</a>
                 <a href="{{ route('admin.websites.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.websites.*') ? 'active' : '' }}">Websites</a>
+                <a href="{{ route('admin.posts.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">Posts</a>
                 <a href="{{ route('admin.leads.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">Leads</a>
                 <a href="{{ route('admin.email-logs.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.email-logs.*') ? 'active' : '' }}">Email Logs</a>
             </nav>
