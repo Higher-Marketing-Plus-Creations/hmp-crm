@@ -64,13 +64,25 @@ class PostController extends Controller
 
         return redirect()->route('admin.posts.index')->with('status', 'Post deleted successfully.');
     }
-
-    public function widget(Request $request): JsonResponse
+public function widget(Request $request): JsonResponse
 {
-    $websiteId = $request->integer('website_id');
+    $apiKey = $request->get('api_key');
 
-    $posts = Post::query()
-        ->when($websiteId, fn ($query) => $query->where('website_id', $websiteId))
+    if (!$apiKey) {
+        return response()->json([
+            'message' => 'API Key is required.'
+        ], 400);
+    }
+
+    $website = Website::where('api_key', $apiKey)->first();
+
+    if (!$website) {
+        return response()->json([
+            'message' => 'Invalid API Key.'
+        ], 404);
+    }
+
+    $posts = Post::where('website_id', $website->id)
         ->latest()
         ->limit(10)
         ->get([
@@ -84,25 +96,26 @@ class PostController extends Controller
         ])
         ->map(function ($post) {
             $post->feature_image = $post->feature_image
-                ? asset('storage/' . $post->feature_image)
+                ? asset('storage/public/' . str_replace('public/', '', $post->feature_image))
                 : null;
 
             return $post;
         });
 
     return response()->json([
-        'website_id' => $websiteId,
+        'api_key' => $apiKey,
         'posts' => $posts,
     ]);
 }
 
     public function widgetScript(Request $request): Response
-    {
-        $websiteId = $request->integer('website_id');
-
-        return response()->view('posts.widget-script', ['websiteId' => $websiteId], 200)
-            ->header('Content-Type', 'application/javascript');
-    }
+{
+    return response()
+        ->view('posts.widget-script', [
+            'apiKey' => $request->api_key
+        ])
+        ->header('Content-Type', 'application/javascript');
+}
 
     protected function validatedData(Request $request, ?Post $post = null): array
     {

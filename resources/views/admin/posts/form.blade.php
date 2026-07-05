@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="crm-card p-6">
-    <form method="POST" action="{{ isset($post->id) ? route('admin.posts.update', $post) : route('admin.posts.store') }}" class="space-y-6"     enctype="multipart/form-data">
+    <form method="POST" action="{{ isset($post->id) ? route('admin.posts.update', $post) : route('admin.posts.store') }}" class="space-y-6" enctype="multipart/form-data">
         @csrf
         @if (isset($post->id))
         @method('PUT')
@@ -25,12 +25,12 @@
                 <label class="text-sm font-semibold text-slate-700" for="feature_image">Feature Image</label>
                 <input id="feature_image" name="feature_image" type="file" value="{{ old('feature_image', $post->feature_image) }}" class="crm-input" placeholder="https://example.com/image.jpg">
                 @if ($post->feature_image)
-@if($post->feature_image)
-    <img
-        src="{{ asset('storage/' . $post->feature_image) }}"
-        alt="Feature Image"
-        class="mt-2 h-32 w-32 rounded object-cover">
-@endif                @endif
+                @if($post->feature_image)
+                <img
+                    src="{{ asset('storage/' . $post->feature_image) }}"
+                    alt="Feature Image"
+                    class="mt-2 h-32 w-32 rounded object-cover">
+                @endif @endif
             </div>
 
             <div class="space-y-2">
@@ -47,6 +47,14 @@
                 <option value="{{ $website->id }}" {{ old('website_id', $post->website_id) == $website->id ? 'selected' : '' }}>{{ $website->website_name }}</option>
                 @endforeach
             </select>
+                <script>
+                const websites = @json($websites-> map(function($website) {
+                    return [
+                        'id' => $website->id,
+                        'api_key' => $website->api_key
+                    ];
+                }));
+            </script>
         </div>
 
         <div class="space-y-2">
@@ -59,7 +67,9 @@
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             <p class="font-semibold text-slate-700">Embed script</p>
             <p class="mt-2">Use this on any website to render posts:</p>
-            <code class="mt-3 block overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">&lt;script src="{{ url('/api/posts/widget-script') }}?website_id={{ $post->website_id ?? 'YOUR_WEBSITE_ID' }}"&gt;&lt;/script&gt;</code>
+            <code id="embedScript" class="mt-3 block overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
+                &lt;script data-continer=".post" src="{{ url('/api/posts/widget-script') }}?api_key={{ optional($websites->firstWhere('id', old('website_id', $post->website_id)))->api_key ?? 'YOUR_API_KEY' }}"&gt;&lt;/script&gt;
+            </code>
         </div>
 
         <div class="flex items-center gap-3">
@@ -79,5 +89,29 @@
         toolbar: 'undo redo | blocks | bold italic underline | link image | alignleft aligncenter alignright | bullist numlist outdent indent | removeformat code',
         content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 14px; }'
     });
+
+    
+</script>
+<script>
+    const websiteSelect = document.getElementById('website_id');
+    const embedScript = document.getElementById('embedScript');
+
+    function updateEmbedScript() {
+
+        const website = websites.find(w => w.id == websiteSelect.value);
+
+        const apiKey = website ? website.api_key : 'YOUR_API_KEY';
+
+        // Default container selector
+        const container = '.post';
+
+        embedScript.textContent =
+`<script src="{{ url('/api/posts/widget-script') }}?api_key=${apiKey}" data-container="${container}"><\/script>`;
+    }
+
+    websiteSelect.addEventListener('change', updateEmbedScript);
+
+    // Edit page load hone par
+    updateEmbedScript();
 </script>
 @endsection
