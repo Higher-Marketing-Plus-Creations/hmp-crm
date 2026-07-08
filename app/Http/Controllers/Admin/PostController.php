@@ -14,21 +14,34 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
-    public function index(): View
+    public function index(Request $request, ?Website $website = null): View
     {
+        $website = $website ?: ($request->route('website') instanceof Website ? $request->route('website') : null);
+
+        $query = Post::query()->with('website');
+
+        if ($website) {
+            $query->where('website_id', $website->id);
+        }
+
         return view('admin.posts.index', [
-            'posts' => Post::query()
-                ->with('website')
+            'website' => $website,
+            'posts' => $query
                 ->latest()
                 ->paginate(12),
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request, ?Website $website = null): View
     {
+        $website = $website ?: ($request->route('website') instanceof Website ? $request->route('website') : null);
+
         return view('admin.posts.form', [
             'post' => new Post(),
-            'websites' => Website::query()->orderBy('website_name')->get(),
+            'website' => $website,
+            'websites' => $website
+                ? collect([$website])
+                : Website::query()->orderBy('website_name')->get(),
         ]);
     }
 
@@ -45,7 +58,10 @@ class PostController extends Controller
     {
         return view('admin.posts.form', [
             'post' => $post,
-            'websites' => Website::query()->orderBy('website_name')->get(),
+            'website' => $post->website,
+            'websites' => $post->website
+                ? collect([$post->website])
+                : Website::query()->orderBy('website_name')->get(),
         ]);
     }
 
@@ -108,6 +124,54 @@ public function widget(Request $request): JsonResponse
     ]);
 }
 
+public function detail(Request $request): JsonResponse
+{
+    $validated = $request->validate([
+        'api_key' => ['required', 'string'],
+        'post_id' => ['required', 'integer'],
+    ]);
+
+    $website = Website::query()
+        ->where('api_key', $validated['api_key'])
+        ->first();
+
+    if (! $website) {
+        return response()->json([
+            'message' => 'Invalid API Key.',
+        ], 404);
+    }
+
+    $post = Post::query()
+        ->where('website_id', $website->id)
+        ->whereKey($validated['post_id'])
+        ->first();
+
+    if (! $post) {
+        return response()->json([
+            'message' => 'Post not found for this website.',
+        ], 404);
+    }
+
+    return response()->json([
+        'api_key' => $validated['api_key'],
+        'post' => [
+            'id' => $post->id,
+            'title' => $post->title,
+            'slug' => $post->slug,
+            'feature_image' => $post->feature_image ? asset('storage/' . $post->feature_image) : null,
+            'content' => $post->content,
+            'category' => $post->category,
+            'created_at' => $post->created_at,
+            'updated_at' => $post->updated_at,
+            'website' => [
+                'id' => $website->id,
+                'website_name' => $website->website_name,
+                'website_url' => $website->website_url,
+            ],
+        ],
+    ]);
+}
+
     public function widgetScript(Request $request): Response
 {
     return response()
@@ -119,12 +183,14 @@ public function widget(Request $request): JsonResponse
 
     protected function validatedData(Request $request, ?Post $post = null): array
     {
+        $website = $request->route('website');
+
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255'],
             'feature_image' => ['nullable', 'mimes:jpeg,png,jpg', 'max:2048'],
             'content' => ['required', 'string'],
-            'website_id' => ['nullable', 'exists:websites,id'],
+            'website_id' => [$website ? 'nullable' : 'required', 'exists:websites,id'],
             'category' => ['nullable', 'string', 'max:100'],
             
         ]);
@@ -132,7 +198,12 @@ public function widget(Request $request): JsonResponse
         $data['slug'] = $this->normalizeSlug($data['slug'] ?? null, (string) ($data['title'] ?? ''), $post);
         $data['feature_image'] = trim((string) ($data['feature_image'] ?? '')) !== '' ? trim((string) $data['feature_image']) : null;
         $data['category'] = trim((string) ($data['category'] ?? '')) !== '' ? trim((string) $data['category']) : null;
-        $data['website_id'] = $data['website_id'] ?? null;
+        if ($website instanceof Website) {
+            $data['website_id'] = $website->id;
+        } else {
+            $data['website_id'] = $data['website_id'] ?? null;
+        }
+
         if($data['feature_image']) {
             $data['feature_image'] = $request->file('feature_image')->store('public/feature_images');
         }

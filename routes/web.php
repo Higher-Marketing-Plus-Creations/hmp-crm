@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('clients/{client}/workspace', [ClientWorkspaceController::class, 'show'])->name('clients.workspace');
         Route::post('websites/{website}/run-test', [WebsiteMonitorController::class, 'store'])->name('websites.run-test');
+        Route::get('websites/{website}/posts', [PostController::class, 'index'])->name('websites.posts.index');
+        Route::get('websites/{website}/posts/create', [PostController::class, 'create'])->name('websites.posts.create');
 
         Route::resource('clients', ClientController::class)->except(['show']);
         Route::resource('websites', WebsiteController::class)->except(['show']);

@@ -1,5 +1,12 @@
 @extends('layouts.app', ['title' => isset($post->id) ? 'Edit Post' : 'Create Post', 'heading' => isset($post->id) ? 'Edit Post' : 'Create Post'])
 
+@php
+    $selectedWebsite = $website ?? $websites->firstWhere('id', old('website_id', $post->website_id));
+    $singlePostApiUrl = $selectedWebsite
+        ? url('/api/posts/detail') . '?api_key=' . $selectedWebsite->api_key . '&post_id=' . ($post->id ?: '{POST_ID}')
+        : url('/api/posts/detail') . '?api_key=YOUR_API_KEY&post_id={POST_ID}';
+@endphp
+
 @section('content')
 <div class="crm-card p-6">
     <form method="POST" action="{{ isset($post->id) ? route('admin.posts.update', $post) : route('admin.posts.store') }}" class="space-y-6" enctype="multipart/form-data">
@@ -41,14 +48,19 @@
 
         <div class="space-y-2">
             <label class="text-sm font-semibold text-slate-700" for="website_id">Website</label>
-            <select id="website_id" name="website_id" class="crm-input">
-                <option value="">All websites</option>
-                @foreach($websites as $website)
-                <option value="{{ $website->id }}" {{ old('website_id', $post->website_id) == $website->id ? 'selected' : '' }}>{{ $website->website_name }}</option>
-                @endforeach
-            </select>
-                <script>
-                const websites = @json($websites-> map(function($website) {
+            @if($websites->count() === 1)
+                <input type="hidden" name="website_id" value="{{ $websites->first()->id }}">
+                <input class="crm-input" value="{{ $websites->first()->website_name }}" readonly>
+            @else
+                <select id="website_id" name="website_id" class="crm-input" required>
+                    <option value="">Select website</option>
+                    @foreach($websites as $websiteOption)
+                        <option value="{{ $websiteOption->id }}" {{ old('website_id', $post->website_id) == $websiteOption->id ? 'selected' : '' }}>{{ $websiteOption->website_name }}</option>
+                    @endforeach
+                </select>
+            @endif
+            <script>
+                const websites = @json($websites->map(function ($website) {
                     return [
                         'id' => $website->id,
                         'api_key' => $website->api_key
@@ -70,6 +82,15 @@
             <code id="embedScript" class="mt-3 block overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
                 &lt;script data-continer=".post" src="{{ url('/api/posts/widget-script') }}?api_key={{ optional($websites->firstWhere('id', old('website_id', $post->website_id)))->api_key ?? 'YOUR_API_KEY' }}"&gt;&lt;/script&gt;
             </code>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <div class="flex items-center justify-between gap-3">
+                <p class="font-semibold text-slate-700">Single Post API</p>
+                <button type="button" class="crm-button-secondary px-3 py-2 text-xs" data-copy-target="single-post-api-url">Copy URL</button>
+            </div>
+            <p class="mt-2">Use this endpoint to fetch one post by API key and post ID.</p>
+            <input id="single-post-api-url" type="text" class="mt-3 crm-input font-mono text-xs" value="{{ $singlePostApiUrl }}" readonly>
         </div>
 
         <div class="flex items-center gap-3">
@@ -97,8 +118,11 @@
     const embedScript = document.getElementById('embedScript');
 
     function updateEmbedScript() {
+        if (!websiteSelect || !embedScript) {
+            return;
+        }
 
-        const website = websites.find(w => w.id == websiteSelect.value);
+        const website = websites.find(w => w.id == websiteSelect.value) || websites[0];
 
         const apiKey = website ? website.api_key : 'YOUR_API_KEY';
 
@@ -109,9 +133,38 @@
 `<script src="{{ url('/api/posts/widget-script') }}?api_key=${apiKey}" data-container="${container}"><\/script>`;
     }
 
-    websiteSelect.addEventListener('change', updateEmbedScript);
+    if (websiteSelect) {
+        websiteSelect.addEventListener('change', updateEmbedScript);
+    }
 
-    // Edit page load hone par
     updateEmbedScript();
+
+    document.querySelectorAll('[data-copy-target]').forEach(function (button) {
+        button.addEventListener('click', async function () {
+            var targetId = button.getAttribute('data-copy-target');
+            var target = document.getElementById(targetId);
+
+            if (!target) {
+                return;
+            }
+
+            var value = 'value' in target ? target.value : target.textContent;
+            var originalText = button.textContent;
+
+            try {
+                await navigator.clipboard.writeText(value);
+                button.textContent = 'Copied';
+            } catch (error) {
+                target.focus();
+                target.select();
+                document.execCommand('copy');
+                button.textContent = 'Copied';
+            }
+
+            setTimeout(function () {
+                button.textContent = originalText;
+            }, 1500);
+        });
+    });
 </script>
 @endsection

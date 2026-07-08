@@ -5,9 +5,17 @@
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h3 class="text-xl font-black text-slate-900">Blog Posts</h3>
-                <p class="text-sm text-slate-500">Create posts for a website and display them with the embed script.</p>
+                <p class="text-sm text-slate-500">
+                    {{ isset($website) && $website ? $website->website_name . ' posts only.' : 'Create posts for a website and display them with the embed script.' }}
+                </p>
             </div>
-            <a href="{{ route('admin.posts.create') }}" class="crm-button">Add Post</a>
+            <div class="flex gap-2">
+                @if(isset($website) && $website)
+                    <a href="{{ route('admin.websites.posts.create', $website) }}" class="crm-button">Add Post</a>
+                @else
+                    <a href="{{ route('admin.posts.create') }}" class="crm-button">Add Post</a>
+                @endif
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -34,6 +42,7 @@
                         <td class="py-4 align-top">{{ $post->created_at->format('d M Y') }}</td>
                         <td class="py-4 align-top">
                             <div class="flex justify-end gap-2">
+                              
                                 <a href="{{ route('admin.posts.edit', $post) }}" class="crm-button-secondary">Edit</a>
                                 <form method="POST" action="{{ route('admin.posts.destroy', $post) }}">
                                     @csrf

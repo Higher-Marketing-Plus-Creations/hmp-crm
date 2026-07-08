@@ -74,6 +74,8 @@
                             </td>
                             <td class="py-4 align-top">
                                 <div class="flex justify-end gap-2">
+                                    <a href="{{ route('admin.websites.posts.index', $website) }}" class="crm-button-secondary">View Posts</a>
+                                    <a href="{{ route('admin.websites.posts.create', $website) }}" class="crm-button-secondary">New Post</a>
                                     <form method="POST" action="{{ route('admin.websites.run-test', $website) }}">
                                         @csrf
                                         <button type="submit" class="crm-button-secondary">Run Test</button>
