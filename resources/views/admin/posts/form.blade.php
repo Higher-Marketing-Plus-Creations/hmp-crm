@@ -2,6 +2,9 @@
 
 @php
     $selectedWebsite = $website ?? $websites->firstWhere('id', old('website_id', $post->website_id));
+    $allPostsWidgetApiUrl = $selectedWebsite
+        ? url('/api/posts/widget') . '?api_key=' . $selectedWebsite->api_key
+        : url('/api/posts/widget') . '?api_key=YOUR_API_KEY';
     $singlePostApiUrl = $selectedWebsite
         ? url('/api/posts/detail') . '?api_key=' . $selectedWebsite->api_key . '&post_id=' . ($post->id ?: '{POST_ID}')
         : url('/api/posts/detail') . '?api_key=YOUR_API_KEY&post_id={POST_ID}';
@@ -79,9 +82,27 @@
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             <p class="font-semibold text-slate-700">Embed script</p>
             <p class="mt-2">Use this on any website to render posts:</p>
-            <code id="embedScript" class="mt-3 block overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
+            <code id="embedScript" class="mt-3 block overflow-x-auto rounded  p-3 text-xs text-slate-100">
                 &lt;script data-continer=".post" src="{{ url('/api/posts/widget-script') }}?api_key={{ optional($websites->firstWhere('id', old('website_id', $post->website_id)))->api_key ?? 'YOUR_API_KEY' }}"&gt;&lt;/script&gt;
             </code>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <div class="flex items-center justify-between gap-3">
+                <p class="font-semibold text-slate-700">All Posts Widget API</p>
+                <button type="button" class="crm-button-secondary px-3 py-2 text-xs" data-copy-target="all-posts-widget-api-url">Copy URL</button>
+            </div>
+            <p class="mt-2">Use this endpoint to fetch all posts for the selected website.</p>
+            <input id="all-posts-widget-api-url" type="text" class="mt-3 crm-input font-mono text-xs" value="{{ $allPostsWidgetApiUrl }}" readonly>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <div class="flex items-center justify-between gap-3">
+                <p class="font-semibold text-slate-700">Widget Script API</p>
+                <button type="button" class="crm-button-secondary px-3 py-2 text-xs" data-copy-target="widget-script-api-url">Copy URL</button>
+            </div>
+            <p class="mt-2">Use this endpoint when you want the widget script loader for posts.</p>
+            <input id="widget-script-api-url" type="text" class="mt-3 crm-input font-mono text-xs" value="{{ url('/api/posts/widget-script') }}?api_key={{ $selectedWebsite->api_key ?? 'YOUR_API_KEY' }}" readonly>
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
