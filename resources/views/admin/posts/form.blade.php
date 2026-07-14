@@ -82,7 +82,7 @@
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             <p class="font-semibold text-slate-700">Embed script</p>
             <p class="mt-2">Use this on any website to render posts:</p>
-            <code id="embedScript" class="mt-3 block overflow-x-auto rounded  p-3 text-xs text-slate-100">
+            <code id="embedScript" class="mt-3 block overflow-x-auto bg-repeat rounded  p-3 text-xs ">
                 &lt;script data-continer=".post" src="{{ url('/api/posts/widget-script') }}?api_key={{ optional($websites->firstWhere('id', old('website_id', $post->website_id)))->api_key ?? 'YOUR_API_KEY' }}"&gt;&lt;/script&gt;
             </code>
         </div>
