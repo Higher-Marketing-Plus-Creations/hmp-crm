@@ -121,18 +121,21 @@
     </form>
 </div>
 
-<script src="https://cdn.tiny.cloud/1/k12b7zpzz1eumtu6ofkn2u7o56d2ip58ztpas78aht3cwwk2/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 <script>
-    tinymce.init({
-        selector: '#content',
+    $('#content').summernote({
         height: 360,
-        menubar: false,
-        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen',
-        toolbar: 'undo redo | blocks | bold italic underline | link image | alignleft aligncenter alignright | bullist numlist outdent indent | removeformat code',
-        content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 14px; }'
+        placeholder: 'Write your post content here...',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link', 'picture']],
+            ['view', ['codeview']]
+        ]
     });
-
-    
 </script>
 <script>
     const websiteSelect = document.getElementById('website_id');
