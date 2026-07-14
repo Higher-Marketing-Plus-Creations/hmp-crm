@@ -131,6 +131,34 @@
                             <span class="crm-badge-info">Uptime {{ number_format((float) $check->uptime_percentage, 2) }}%</span>
                         @endif
                     </div>
+
+                    <div class="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
+                        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Posts</p>
+                                <p class="mt-2 text-sm text-slate-600">Create and manage posts for this website from the workspace.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{{ route('admin.websites.posts.index', $website) }}" class="crm-button-secondary">View Posts</a>
+                                <a href="{{ route('admin.websites.posts.create', $website) }}" class="crm-button">New Post</a>
+                            </div>
+                        </div>
+                        @if ($website->recentPosts->isNotEmpty())
+                            <div class="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                                @foreach ($website->recentPosts as $post)
+                                    <div class="rounded-2xl bg-slate-50 p-4">
+                                        <p class="font-semibold text-slate-900">{{ $post->title }}</p>
+                                        <p class="mt-1 text-xs text-slate-500">{{ $post->category ?? 'Uncategorized' }} | {{ $post->created_at?->format('d M Y') }}</p>
+                                        <div class="mt-3 flex gap-2">
+                                            <a href="{{ route('admin.posts.edit', $post) }}" class="crm-button-secondary">Edit</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="mt-4 text-sm text-slate-500">No posts added for this website yet.</p>
+                        @endif
+                    </div>
                 </div>
             @empty
                 <div class="crm-card p-8 text-center">

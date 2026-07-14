@@ -32,6 +32,13 @@ class ClientWorkspaceController extends Controller
                     ->latest('created_at')
                     ->first()
             );
+            $website->setRelation(
+                'recentPosts',
+                $website->posts()
+                    ->latest()
+                    ->limit(5)
+                    ->get()
+            );
 
             return $website;
         });

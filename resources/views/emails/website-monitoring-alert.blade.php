@@ -2,31 +2,22 @@
 
 <p><strong>Website:</strong> {{ $alert->website?->website_name }}</p>
 <p><strong>URL:</strong> {{ $alert->website?->website_url }}</p>
-<p><strong>Alert Type:</strong> {{ strtoupper($alert->type) }}</p>
-<p><strong>Status:</strong> {{ $alert->state_label }}</p>
+<p><strong>Status:</strong> {{ $alert->check?->website_status === 'online' ? 'Live' : 'Down' }}</p>
+<p><strong>SSL:</strong> {{ $alert->check?->ssl_status === 'valid' ? 'Valid' : (in_array($alert->check?->ssl_status, ['expired', 'not_secure'], true) ? 'Not OK' : ucwords(str_replace('_', ' ', (string) $alert->check?->ssl_status))) }}</p>
+<p><strong>Google Analytics:</strong> {{ $alert->check?->google_analytics_detected ? 'Detected' : 'Not detected' }}</p>
+<p><strong>GTM:</strong> {{ $alert->check?->google_tag_manager_detected ? 'Detected' : 'Not detected' }}</p>
+<p><strong>Search Console:</strong> {{ $alert->check?->google_search_console_detected ? 'Detected' : 'Not detected' }}</p>
+<p><strong>Microsoft Tracking:</strong> {{ $alert->check?->microsoft_tracking_detected ? 'Detected' : 'Not detected' }}</p>
+@php
+    $alertIssues = collect($alert->check->issues ?? [])
+        ->reject(fn ($issue) => str_contains(strtolower((string) $issue), 'website check failed'))
+        ->reject(fn ($issue) => str_contains(strtolower((string) $issue), 'unable to read the ssl certificate'))
+        ->values()
+        ->all();
+@endphp
+<p><strong>Issues:</strong> {{ filled($alertIssues) ? implode(' | ', $alertIssues) : 'None' }}</p>
 
 @if($alert->check)
-    <p><strong>Website Status:</strong> {{ $alert->check->website_status }}</p>
-    <p><strong>SSL Status:</strong> {{ str_replace('_', ' ', $alert->check->ssl_status) }}</p>
-    <p><strong>Last Checked At:</strong> {{ optional($alert->check->last_checked_at)->format('d M Y h:i A') }}</p>
-    @if($alert->check->response_time_ms !== null)
-        <p><strong>Response Time:</strong> {{ $alert->check->response_time_ms }} ms</p>
-    @endif
-    @if($alert->check->ssl_expiry_date)
-        <p><strong>SSL Expiry:</strong> {{ optional($alert->check->ssl_expiry_date)->format('d M Y h:i A') }}</p>
-    @endif
-    @if($alert->check->ssl_days_left !== null)
-        <p><strong>SSL Days Left:</strong> {{ $alert->check->ssl_days_left }}</p>
-    @endif
-    @if($alert->check->last_error)
-        <p><strong>Last Error:</strong> {{ $alert->check->last_error }}</p>
-    @endif
-    @if(($alert->check->issues ?? []) !== [])
-        <p><strong>Issues:</strong></p>
-        <ul>
-            @foreach($alert->check->issues as $issue)
-                <li>{{ $issue }}</li>
-            @endforeach
-        </ul>
-    @endif
+    <p><strong>HTTP:</strong> {{ $alert->check->http_status_code ?? 'N/A' }}</p>
+    <p><strong>Tested At:</strong> {{ optional($alert->check->tested_at)->format('d M Y h:i A') }}</p>
 @endif

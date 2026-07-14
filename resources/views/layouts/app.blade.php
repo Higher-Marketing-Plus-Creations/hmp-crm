@@ -23,7 +23,6 @@
                 <a href="{{ route('dashboard') }}" class="crm-sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('admin.clients.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">Clients</a>
                 <a href="{{ route('admin.websites.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.websites.*') ? 'active' : '' }}">Websites</a>
-                <a href="{{ route('admin.posts.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">Posts</a>
                 <a href="{{ route('admin.leads.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">Leads</a>
                 <a href="{{ route('admin.email-logs.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.email-logs.*') ? 'active' : '' }}">Email Logs</a>
             </nav>

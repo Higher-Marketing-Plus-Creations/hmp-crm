@@ -124,9 +124,23 @@ class Website extends Model
 
     public function recipientList(): array
     {
-        return array_values(array_filter(array_map(
+        $recipients = array_values(array_filter(array_map(
             fn (mixed $email) => filter_var(trim((string) $email), FILTER_VALIDATE_EMAIL) ?: null,
             $this->notification_emails ?? []
         )));
+
+        $clientEmail = $this->client?->email;
+
+        if (is_string($clientEmail) && filter_var(trim($clientEmail), FILTER_VALIDATE_EMAIL)) {
+            $recipients[] = trim($clientEmail);
+        }
+
+        $adminEmail = (string) config('mail.from.address', env('ADMIN_EMAIL'));
+
+        if ($adminEmail !== '' && filter_var(trim($adminEmail), FILTER_VALIDATE_EMAIL)) {
+            $recipients[] = trim($adminEmail);
+        }
+
+        return array_values(array_unique($recipients));
     }
 }

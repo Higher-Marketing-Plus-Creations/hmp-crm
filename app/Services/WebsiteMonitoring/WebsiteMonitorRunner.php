@@ -110,10 +110,6 @@ class WebsiteMonitorRunner
             $issues[] = 'Failed form submissions recorded: ' . $failedFormCount . '.';
         }
 
-        if ($formsSubmittedThisMonth === 0) {
-            $issues[] = 'No forms submitted this month yet.';
-        }
-
         $uptimePercentage = $this->resolveUptimePercentage($website, $websiteStatus);
 
         $check = $website->monitorChecks()->create([

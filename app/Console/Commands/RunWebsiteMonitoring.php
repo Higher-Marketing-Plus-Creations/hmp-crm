@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Website;
 use App\Services\WebsiteMonitoring\WebsiteMonitorRunner;
+use App\Services\WebsiteMonitoring\WebsiteMonitoringReportMailer;
 use Illuminate\Console\Command;
 
 class RunWebsiteMonitoring extends Command
@@ -12,7 +13,7 @@ class RunWebsiteMonitoring extends Command
 
     protected $description = 'Run automatic website uptime and SSL monitoring checks.';
 
-    public function handle(WebsiteMonitorRunner $runner): int
+    public function handle(WebsiteMonitorRunner $runner, WebsiteMonitoringReportMailer $reportMailer): int
     {
         $query = Website::query()->where('status', 'active');
 
@@ -32,6 +33,7 @@ class RunWebsiteMonitoring extends Command
 
         foreach ($websites as $website) {
             $check = $runner->run($website, (string) $this->option('trigger'));
+            $reportMailer->send($website, $check);
 
             $this->line(sprintf(
                 '[%d] %s | website=%s | ssl=%s | issues=%d',
