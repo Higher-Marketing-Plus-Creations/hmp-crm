@@ -121,7 +121,7 @@
     </form>
 </div>
 
-<script src="https://cdn.tiny.cloud/1/o0ha19018mpresx2wuhby39ymhf9r9op3tek3wzwzypz97us/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/k12b7zpzz1eumtu6ofkn2u7o56d2ip58ztpas78aht3cwwk2/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     tinymce.init({
         selector: '#content',
