@@ -149,5 +149,43 @@
             }, 1500);
         });
     });
+
+    (function () {
+        var titleInput = document.getElementById('title');
+        var slugInput = document.getElementById('slug');
+        var slugTouched = false;
+
+        if (!titleInput || !slugInput) {
+            return;
+        }
+
+        slugInput.addEventListener('input', function () {
+            slugTouched = slugInput.value.trim() !== '';
+        });
+
+        function toSlug(value) {
+            return value
+                .toString()
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        function syncSlug() {
+            if (slugTouched) {
+                return;
+            }
+
+            slugInput.value = toSlug(titleInput.value);
+        }
+
+        titleInput.addEventListener('input', syncSlug);
+        titleInput.addEventListener('blur', syncSlug);
+
+        syncSlug();
+    })();
 </script>
 @endsection

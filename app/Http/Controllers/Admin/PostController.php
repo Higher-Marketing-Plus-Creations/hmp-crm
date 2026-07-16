@@ -197,7 +197,11 @@ class PostController extends Controller
             
         ]);
 
-        $data['slug'] = $this->normalizeSlug((string) ($data['title'] ?? ''), $post);
+        $data['slug'] = $this->normalizeSlug(
+            (string) ($data['slug'] ?? ''),
+            (string) ($data['title'] ?? ''),
+            $post
+        );
         $data['feature_image'] = trim((string) ($data['feature_image'] ?? '')) !== '' ? trim((string) $data['feature_image']) : null;
         $data['category'] = trim((string) ($data['category'] ?? '')) !== '' ? trim((string) $data['category']) : null;
         if ($website instanceof Website) {
@@ -213,9 +217,9 @@ class PostController extends Controller
         return $data;
     }
 
-    protected function normalizeSlug(string $title, ?Post $post): string
+    protected function normalizeSlug(string $slug, string $title, ?Post $post): string
     {
-        $baseSlug = Str::slug($title);
+        $baseSlug = trim($slug) !== '' ? Str::slug($slug) : Str::slug($title);
 
         if ($baseSlug === '') {
             $baseSlug = 'post';
