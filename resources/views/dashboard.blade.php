@@ -18,6 +18,11 @@
             <p class="text-sm font-semibold text-slate-500">Websites Not Tested Yet</p>
             <p class="mt-3 text-4xl font-black text-slate-900">{{ number_format($stats['untested_websites']) }}</p>
         </div>
+        <div class="crm-card p-6">
+            <p class="text-sm font-semibold text-slate-500">Call Records</p>
+            <p class="mt-3 text-4xl font-black text-slate-900">Twilio</p>
+            <a href="{{ route('admin.twilio.recordings.index') }}" class="mt-4 inline-flex text-sm font-bold text-teal-700">Open recordings</a>
+        </div>
     </div>
 
     <div class="crm-card mt-6 p-6">
@@ -29,6 +34,7 @@
             <div class="flex gap-3">
                 <a href="{{ route('admin.clients.create') }}" class="crm-button">Create Client</a>
                 <a href="{{ route('admin.websites.create') }}" class="crm-button-secondary">Connect Website</a>
+                <a href="{{ route('admin.twilio.recordings.index') }}" class="crm-button-secondary">Call Records</a>
             </div>
         </div>
     </div>

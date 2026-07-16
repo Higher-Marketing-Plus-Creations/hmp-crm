@@ -9,12 +9,13 @@ use App\Http\Controllers\Admin\WebsiteController;
 use App\Http\Controllers\Admin\WebsiteMonitorController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TwilioRecordingController;
 use Illuminate\Support\Facades\Route;
-
 Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'create'])->name('login');
     Route::get('/login', [AuthController::class, 'create']);
     Route::post('/login', [AuthController::class, 'store'])->name('login.store');
+  
 });
 
 Route::middleware('auth')->group(function () {
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('clients/{client}/workspace', [ClientWorkspaceController::class, 'show'])->name('clients.workspace');
+        Route::get('call-recordings', [TwilioRecordingController::class, 'index'])->name('twilio.recordings.index');
+        Route::get('call-recordings/{recordingSid}/audio', [TwilioRecordingController::class, 'audio'])->name('twilio.recordings.audio');
+        Route::get('call-recordings/{recordingSid}/download', [TwilioRecordingController::class, 'download'])->name('twilio.recordings.download');
         Route::post('websites/{website}/run-test', [WebsiteMonitorController::class, 'store'])->name('websites.run-test');
         Route::get('websites/{website}/posts', [PostController::class, 'index'])->name('websites.posts.index');
         Route::get('websites/{website}/posts/create', [PostController::class, 'create'])->name('websites.posts.create');

@@ -24,6 +24,7 @@
                 <a href="{{ route('admin.clients.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">Clients</a>
                 <a href="{{ route('admin.websites.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.websites.*') ? 'active' : '' }}">Websites</a>
                 <a href="{{ route('admin.leads.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.leads.*') ? 'active' : '' }}">Leads</a>
+                <a href="{{ route('admin.twilio.recordings.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.twilio.recordings.*') ? 'active' : '' }}">Call Records</a>
                 <a href="{{ route('admin.email-logs.index') }}" class="crm-sidebar-link {{ request()->routeIs('admin.email-logs.*') ? 'active' : '' }}">Email Logs</a>
             </nav>
         </aside>
