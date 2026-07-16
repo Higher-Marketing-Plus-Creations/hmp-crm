@@ -6,8 +6,8 @@
         ? url('/api/posts/widget') . '?api_key=' . $selectedWebsite->api_key
         : url('/api/posts/widget') . '?api_key=YOUR_API_KEY';
     $singlePostApiUrl = $selectedWebsite
-        ? url('/api/posts/detail') . '?api_key=' . $selectedWebsite->api_key . '&post_id=' . ($post->id ?: '{POST_ID}')
-        : url('/api/posts/detail') . '?api_key=YOUR_API_KEY&post_id={POST_ID}';
+        ? url('/api/posts/detail') . '?api_key=' . $selectedWebsite->api_key . '&slug=' . ($post->slug ?: '{SLUG}')
+        : url('/api/posts/detail') . '?api_key=YOUR_API_KEY&slug={SLUG}';
 @endphp
 
 @section('content')
@@ -80,16 +80,8 @@
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            <p class="font-semibold text-slate-700">Embed script</p>
-            <p class="mt-2">Use this on any website to render posts:</p>
-            <code id="embedScript" class="mt-3 block overflow-x-auto bg-repeat rounded  p-3 text-xs ">
-                &lt;script data-continer=".post" src="{{ url('/api/posts/widget-script') }}?api_key={{ optional($websites->firstWhere('id', old('website_id', $post->website_id)))->api_key ?? 'YOUR_API_KEY' }}"&gt;&lt;/script&gt;
-            </code>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             <div class="flex items-center justify-between gap-3">
-                <p class="font-semibold text-slate-700">All Posts Widget API</p>
+                <p class="font-semibold text-slate-700">All Posts API</p>
                 <button type="button" class="crm-button-secondary px-3 py-2 text-xs" data-copy-target="all-posts-widget-api-url">Copy URL</button>
             </div>
             <p class="mt-2">Use this endpoint to fetch all posts for the selected website.</p>
@@ -98,19 +90,10 @@
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             <div class="flex items-center justify-between gap-3">
-                <p class="font-semibold text-slate-700">Widget Script API</p>
-                <button type="button" class="crm-button-secondary px-3 py-2 text-xs" data-copy-target="widget-script-api-url">Copy URL</button>
-            </div>
-            <p class="mt-2">Use this endpoint when you want the widget script loader for posts.</p>
-            <input id="widget-script-api-url" type="text" class="mt-3 crm-input font-mono text-xs" value="{{ url('/api/posts/widget-script') }}?api_key={{ $selectedWebsite->api_key ?? 'YOUR_API_KEY' }}" readonly>
-        </div>
-
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            <div class="flex items-center justify-between gap-3">
                 <p class="font-semibold text-slate-700">Single Post API</p>
                 <button type="button" class="crm-button-secondary px-3 py-2 text-xs" data-copy-target="single-post-api-url">Copy URL</button>
             </div>
-            <p class="mt-2">Use this endpoint to fetch one post by API key and post ID.</p>
+            <p class="mt-2">Use this endpoint to fetch one post by API key and slug.</p>
             <input id="single-post-api-url" type="text" class="mt-3 crm-input font-mono text-xs" value="{{ $singlePostApiUrl }}" readonly>
         </div>
 
@@ -128,6 +111,7 @@
     $('#content').summernote({
         height: 360,
         placeholder: 'Write your post content here...',
+        dialogsInBody: true,
         toolbar: [
             ['style', ['style']],
             ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -138,31 +122,6 @@
     });
 </script>
 <script>
-    const websiteSelect = document.getElementById('website_id');
-    const embedScript = document.getElementById('embedScript');
-
-    function updateEmbedScript() {
-        if (!websiteSelect || !embedScript) {
-            return;
-        }
-
-        const website = websites.find(w => w.id == websiteSelect.value) || websites[0];
-
-        const apiKey = website ? website.api_key : 'YOUR_API_KEY';
-
-        // Default container selector
-        const container = '.post';
-
-        embedScript.textContent =
-`<script src="{{ url('/api/posts/widget-script') }}?api_key=${apiKey}" data-container="${container}"><\/script>`;
-    }
-
-    if (websiteSelect) {
-        websiteSelect.addEventListener('change', updateEmbedScript);
-    }
-
-    updateEmbedScript();
-
     document.querySelectorAll('[data-copy-target]').forEach(function (button) {
         button.addEventListener('click', async function () {
             var targetId = button.getAttribute('data-copy-target');

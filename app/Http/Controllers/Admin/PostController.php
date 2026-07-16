@@ -49,8 +49,10 @@ class PostController extends Controller
     {
         $post = Post::query()->create($this->validatedData($request));
 
+        $website = $post->website ?? $request->route('website');
+
         return redirect()
-            ->route('admin.posts.edit', $post)
+            ->route($website instanceof Website ? 'admin.websites.posts.index' : 'admin.posts.index', $website instanceof Website ? $website : [])
             ->with('status', 'Post created successfully.');
     }
 
@@ -80,56 +82,65 @@ class PostController extends Controller
 
         return redirect()->route('admin.posts.index')->with('status', 'Post deleted successfully.');
     }
-public function widget(Request $request): JsonResponse
-{
-    $apiKey = $request->get('api_key');
+    public function widget(Request $request): JsonResponse
+    {
+        $apiKey = $request->get('api_key');
 
-    if (!$apiKey) {
+        if (!$apiKey) {
+            return response()->json([
+                'message' => 'API Key is required.'
+            ], 400);
+        }
+
+        $website = Website::where('api_key', $apiKey)->first();
+
+        if (!$website) {
+            return response()->json([
+                'message' => 'Invalid API Key.'
+            ], 404);
+        }
+
+        $posts = Post::where('website_id', $website->id)
+            ->latest()
+            ->limit(10)
+            ->get([
+                'id',
+                'title',
+                'slug',
+                'feature_image',
+                'content',
+                'category',
+                'created_at',
+            ])
+            ->map(function ($post) {
+                $post->feature_image = $post->feature_image
+                    ? asset('storage/' . $post->feature_image)
+                    : null;
+
+                return $post;
+            });
+
         return response()->json([
-            'message' => 'API Key is required.'
-        ], 400);
+            'api_key' => $apiKey,
+            'posts' => $posts,
+        ]);
     }
 
-    $website = Website::where('api_key', $apiKey)->first();
-
-    if (!$website) {
-        return response()->json([
-            'message' => 'Invalid API Key.'
-        ], 404);
+    public function widgetScript(Request $request): Response
+    {
+        return response()
+            ->view('posts.widget-script', [
+                'apiKey' => $request->api_key,
+            ])
+            ->header('Content-Type', 'application/javascript');
     }
 
-    $posts = Post::where('website_id', $website->id)
-        ->latest()
-        ->limit(10)
-        ->get([
-            'id',
-            'title',
-            'slug',
-            'feature_image',
-            'content',
-            'category',
-            'created_at',
-        ])
-        ->map(function ($post) {
-            $post->feature_image = $post->feature_image
-                ? asset('storage/public/' . str_replace('public/', '', $post->feature_image))
-                : null;
-
-            return $post;
-        });
-
-    return response()->json([
-        'api_key' => $apiKey,
-        'posts' => $posts,
-    ]);
-}
-
-public function detail(Request $request): JsonResponse
-{
-    $validated = $request->validate([
-        'api_key' => ['required', 'string'],
-        'post_id' => ['required', 'integer'],
-    ]);
+    public function detail(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'api_key' => ['required', 'string'],
+            'slug' => ['required', 'string'],
+        ]);
 
     $website = Website::query()
         ->where('api_key', $validated['api_key'])
@@ -141,10 +152,10 @@ public function detail(Request $request): JsonResponse
         ], 404);
     }
 
-    $post = Post::query()
-        ->where('website_id', $website->id)
-        ->whereKey($validated['post_id'])
-        ->first();
+        $post = Post::query()
+            ->where('website_id', $website->id)
+            ->where('slug', $validated['slug'])
+            ->first();
 
     if (! $post) {
         return response()->json([
@@ -154,10 +165,10 @@ public function detail(Request $request): JsonResponse
 
     return response()->json([
         'api_key' => $validated['api_key'],
-        'post' => [
-            'id' => $post->id,
-            'title' => $post->title,
-            'slug' => $post->slug,
+            'post' => [
+                'id' => $post->id,
+                'title' => $post->title,
+                'slug' => $post->slug,
             'feature_image' => $post->feature_image ? asset('storage/' . $post->feature_image) : null,
             'content' => $post->content,
             'category' => $post->category,
@@ -170,15 +181,6 @@ public function detail(Request $request): JsonResponse
             ],
         ],
     ]);
-}
-
-    public function widgetScript(Request $request): Response
-{
-    return response()
-        ->view('posts.widget-script', [
-            'apiKey' => $request->api_key
-        ])
-        ->header('Content-Type', 'application/javascript');
 }
 
     protected function validatedData(Request $request, ?Post $post = null): array
@@ -195,7 +197,7 @@ public function detail(Request $request): JsonResponse
             
         ]);
 
-        $data['slug'] = $this->normalizeSlug($data['slug'] ?? null, (string) ($data['title'] ?? ''), $post);
+        $data['slug'] = $this->normalizeSlug((string) ($data['title'] ?? ''), $post);
         $data['feature_image'] = trim((string) ($data['feature_image'] ?? '')) !== '' ? trim((string) $data['feature_image']) : null;
         $data['category'] = trim((string) ($data['category'] ?? '')) !== '' ? trim((string) $data['category']) : null;
         if ($website instanceof Website) {
@@ -211,15 +213,9 @@ public function detail(Request $request): JsonResponse
         return $data;
     }
 
-    protected function normalizeSlug(?string $slug, string $title, ?Post $post): string
+    protected function normalizeSlug(string $title, ?Post $post): string
     {
-        $baseSlug = trim((string) $slug);
-
-        if ($baseSlug === '') {
-            $baseSlug = Str::slug($title);
-        }
-
-        $baseSlug = Str::slug($baseSlug);
+        $baseSlug = Str::slug($title);
 
         if ($baseSlug === '') {
             $baseSlug = 'post';

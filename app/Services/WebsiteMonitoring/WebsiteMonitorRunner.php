@@ -52,13 +52,18 @@ class WebsiteMonitorRunner
             $response = $this->performWebsiteRequest($website->website_url);
             $siteLoadTimeMs = (int) round((microtime(true) - $requestStartedAt) * 1000);
             $httpStatusCode = $response->status();
-            $websiteStatus = 'online';
             $trackingDetection = $this->trackingScriptDetector->detect($response->body());
 
-            if ($response->serverError()) {
+            if ($response->status() === 404) {
+                $websiteStatus = 'offline';
+                $issues[] = 'Website returned 404 not found.';
+            } elseif ($response->successful()) {
+                $websiteStatus = 'online';
+            } elseif ($response->serverError()) {
                 $websiteStatus = 'offline';
                 $issues[] = 'Website returned a server error (' . $httpStatusCode . ').';
             } elseif ($response->clientError()) {
+                $websiteStatus = 'offline';
                 $issues[] = 'Website returned a client error (' . $httpStatusCode . ').';
             }
         } catch (\Throwable $exception) {

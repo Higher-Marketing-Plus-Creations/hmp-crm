@@ -1,6 +1,14 @@
 @extends('layouts.app', ['title' => 'Posts', 'heading' => 'Posts'])
 
 @section('content')
+    @php
+        $apiWebsite = $website ?? ($posts->first()?->website);
+        $apiKey = $apiWebsite?->api_key;
+        $embedCode = $apiKey
+            ? '<script data-continer=".post" src="' . url('/api/posts/widget-script') . '?api_key=' . $apiKey . '"></script>'
+            : '<script data-continer=".post" src="' . url('/api/posts/widget-script') . '?api_key=YOUR_API_KEY"></script>';
+    @endphp
+
     <div class="crm-card p-6">
         <div class="mb-6 flex items-center justify-between">
             <div>
@@ -17,6 +25,23 @@
                 @endif
             </div>
         </div>
+
+        @if($apiWebsite && $apiKey)
+            <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Embed / All Posts API</p>
+                    <input class="crm-input mt-2 font-mono text-xs" readonly value="{{ url('/api/posts/widget') }}?api_key={{ $apiKey }}">
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Single Post</p>
+                    <input class="crm-input mt-2 font-mono text-xs" readonly value="{{ url('/api/posts/detail') }}?api_key={{ $apiKey }}&slug={SLUG}">
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2 xl:col-span-1">
+                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Embed Code</p>
+                    <textarea class="crm-input mt-2 h-24 font-mono text-xs" readonly>{{ $embedCode }}</textarea>
+                </div>
+            </div>
+        @endif
 
         <div class="overflow-x-auto">
             <table class="min-w-full text-left text-sm">
@@ -42,7 +67,6 @@
                         <td class="py-4 align-top">{{ $post->created_at->format('d M Y') }}</td>
                         <td class="py-4 align-top">
                             <div class="flex justify-end gap-2">
-                              
                                 <a href="{{ route('admin.posts.edit', $post) }}" class="crm-button-secondary">Edit</a>
                                 <form method="POST" action="{{ route('admin.posts.destroy', $post) }}">
                                     @csrf
