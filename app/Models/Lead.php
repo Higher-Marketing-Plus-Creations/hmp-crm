@@ -24,12 +24,27 @@ class Lead extends Model
         'referrer',
         'status',
         'email_status',
+        'session_id',
+        'full_name',
+        'email',
+        'phone',
+        'intent',
+        'source_page',
+        'notes',
+        'client_id',
+        'business_name',
+        'website_url',
+        'service_interest',
+        'custom_data',
+        'emailed_at',
     ];
 
     protected function casts(): array
     {
         return [
             'form_data' => 'array',
+            'custom_data' => 'array',
+            'emailed_at' => 'datetime',
         ];
     }
 
