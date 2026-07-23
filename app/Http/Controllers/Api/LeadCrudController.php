@@ -78,6 +78,10 @@ class LeadCrudController extends Controller
             'service_interest' => [$partial ? 'sometimes' : 'nullable', 'string'],
             'custom_data' => [$partial ? 'sometimes' : 'nullable', 'array'],
             'emailed_at' => [$partial ? 'sometimes' : 'nullable'],
+            'is_qualified' => [$partial ? 'sometimes' : 'nullable', 'boolean'],
+            'qualified_at' => [$partial ? 'sometimes' : 'nullable'],
+            'notification_sent' => [$partial ? 'sometimes' : 'nullable', 'boolean'],
+            'notification_sent_at' => [$partial ? 'sometimes' : 'nullable'],
             'status' => [$partial ? 'sometimes' : 'nullable', 'string'],
         ];
 

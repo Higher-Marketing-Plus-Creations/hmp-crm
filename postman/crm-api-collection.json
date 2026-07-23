@@ -1100,6 +1100,12 @@
                 "workspaces",
                 "client_123",
                 "overview"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
               ]
             }
           }
@@ -1127,6 +1133,12 @@
                 "workspaces",
                 "client_123",
                 "settings"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
               ]
             }
           }
@@ -1154,6 +1166,12 @@
                 "workspaces",
                 "client_123",
                 "conversation-settings"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
               ]
             }
           }
@@ -1181,6 +1199,20 @@
                 "workspaces",
                 "client_123",
                 "knowledge-base"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                },
+                {
+                  "key": "section_type",
+                  "value": "policy"
+                },
+                {
+                  "key": "section_title",
+                  "value": "Refund"
+                }
               ]
             }
           }
@@ -1208,6 +1240,28 @@
                 "workspaces",
                 "client_123",
                 "sessions"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                },
+                {
+                  "key": "session_id",
+                  "value": "sess_001"
+                },
+                {
+                  "key": "lead_id",
+                  "value": "1"
+                },
+                {
+                  "key": "intent",
+                  "value": "lead_generation"
+                },
+                {
+                  "key": "is_active",
+                  "value": "true"
+                }
               ]
             }
           }
@@ -1235,6 +1289,32 @@
                 "workspaces",
                 "client_123",
                 "conversations"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                },
+                {
+                  "key": "session_id",
+                  "value": "sess_001"
+                },
+                {
+                  "key": "lead_id",
+                  "value": "1"
+                },
+                {
+                  "key": "event_type",
+                  "value": "message"
+                },
+                {
+                  "key": "selected_intent",
+                  "value": "web_development"
+                },
+                {
+                  "key": "role",
+                  "value": "user"
+                }
               ]
             }
           }
@@ -1262,6 +1342,32 @@
                 "workspaces",
                 "client_123",
                 "leads"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                },
+                {
+                  "key": "session_id",
+                  "value": "sess_001"
+                },
+                {
+                  "key": "status",
+                  "value": "new"
+                },
+                {
+                  "key": "intent",
+                  "value": "website_inquiry"
+                },
+                {
+                  "key": "email",
+                  "value": "john@example.com"
+                },
+                {
+                  "key": "phone",
+                  "value": "+923001234567"
+                }
               ]
             }
           }
@@ -1289,6 +1395,32 @@
                 "workspaces",
                 "client_123",
                 "error-logs"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                },
+                {
+                  "key": "session_id",
+                  "value": "sess_001"
+                },
+                {
+                  "key": "lead_id",
+                  "value": "1"
+                },
+                {
+                  "key": "severity",
+                  "value": "error"
+                },
+                {
+                  "key": "status",
+                  "value": "open"
+                },
+                {
+                  "key": "workflow_id",
+                  "value": "wf_01"
+                }
               ]
             }
           }
@@ -1324,6 +1456,12 @@
                 "workspaces",
                 "client_123",
                 "bootstrap"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
               ]
             }
           }
@@ -1359,6 +1497,12 @@
                 "workspaces",
                 "client_123",
                 "conversation-start"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
               ]
             }
           }
@@ -1394,6 +1538,12 @@
                 "workspaces",
                 "client_123",
                 "conversation-event"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
               ]
             }
           }

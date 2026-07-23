@@ -65,18 +65,21 @@ class WorkspaceApiController extends Controller
                     'path' => '/api/workspaces/{client_id}/conversations',
                     'tables' => ['conversations'],
                     'purpose' => 'Message log tied to sessions/leads.',
+                    'query_params' => ['session_id', 'lead_id', 'event_type', 'selected_intent', 'role'],
                 ],
                 'leads' => [
                     'method' => 'GET',
                     'path' => '/api/workspaces/{client_id}/leads',
                     'tables' => ['conversation_leads'],
                     'purpose' => 'Qualified or collected leads for a client.',
+                    'query_params' => ['session_id', 'status', 'intent', 'email', 'phone', 'is_qualified', 'notification_sent'],
                 ],
                 'error_logs' => [
                     'method' => 'GET',
                     'path' => '/api/workspaces/{client_id}/error-logs',
                     'tables' => ['error_logs'],
                     'purpose' => 'Errors and workflow failures for a client.',
+                    'query_params' => ['session_id', 'lead_id', 'severity', 'status', 'workflow_id'],
                 ],
                 'bootstrap' => [
                     'method' => 'POST',
@@ -151,46 +154,86 @@ class WorkspaceApiController extends Controller
 
     public function knowledgeBase(string $clientId): JsonResponse
     {
+        $request = request();
+
         return response()->json([
             'success' => true,
             'message' => 'Knowledge base entries fetched successfully.',
-            'data' => KnowledgeBase::query()->where('client_id', $clientId)->orderBy('sort_order')->get(),
+            'data' => KnowledgeBase::query()
+                ->where('client_id', $clientId)
+                ->when($request->filled('section_type'), fn ($query) => $query->where('section_type', $request->string('section_type')))
+                ->when($request->filled('section_title'), fn ($query) => $query->where('section_title', 'like', '%' . $request->string('section_title') . '%'))
+                ->orderBy('sort_order')
+                ->get(),
         ]);
     }
 
-    public function sessions(string $clientId): JsonResponse
+    public function sessions(Request $request, string $clientId): JsonResponse
     {
         return response()->json([
             'success' => true,
             'message' => 'Sessions fetched successfully.',
-            'data' => ConversationSession::query()->where('client_id', $clientId)->latest('id')->get(),
+            'data' => ConversationSession::query()
+                ->where('client_id', $clientId)
+                ->when($request->filled('session_id'), fn ($query) => $query->where('session_id', $request->string('session_id')))
+                ->when($request->filled('lead_id'), fn ($query) => $query->where('lead_id', $request->integer('lead_id')))
+                ->when($request->filled('intent'), fn ($query) => $query->where('intent', $request->string('intent')))
+                ->when($request->filled('is_active'), fn ($query) => $query->where('is_active', filter_var($request->input('is_active'), FILTER_VALIDATE_BOOLEAN)))
+                ->latest('id')
+                ->get(),
         ]);
     }
 
-    public function conversations(string $clientId): JsonResponse
+    public function conversations(Request $request, string $clientId): JsonResponse
     {
         return response()->json([
             'success' => true,
             'message' => 'Conversations fetched successfully.',
-            'data' => Conversation::query()->where('client_id', $clientId)->latest('id')->get(),
+            'data' => Conversation::query()
+                ->where('client_id', $clientId)
+                ->when($request->filled('session_id'), fn ($query) => $query->where('session_id', $request->string('session_id')))
+                ->when($request->filled('lead_id'), fn ($query) => $query->where('lead_id', $request->integer('lead_id')))
+                ->when($request->filled('event_type'), fn ($query) => $query->where('event_type', $request->string('event_type')))
+                ->when($request->filled('selected_intent'), fn ($query) => $query->where('selected_intent', $request->string('selected_intent')))
+                ->when($request->filled('role'), fn ($query) => $query->where('role', $request->string('role')))
+                ->latest('id')
+                ->get(),
         ]);
     }
 
-    public function leads(string $clientId): JsonResponse
+    public function leads(Request $request, string $clientId): JsonResponse
     {
         return response()->json([
             'success' => true,
             'message' => 'Leads fetched successfully.',
-            'data' => ConversationLead::query()->where('client_id', $clientId)->latest('id')->get(),
+            'data' => ConversationLead::query()
+                ->where('client_id', $clientId)
+                ->when($request->filled('session_id'), fn ($query) => $query->where('session_id', $request->string('session_id')))
+                ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
+                ->when($request->filled('intent'), fn ($query) => $query->where('intent', $request->string('intent')))
+                ->when($request->filled('email'), fn ($query) => $query->where('email', $request->string('email')))
+                ->when($request->filled('phone'), fn ($query) => $query->where('phone', $request->string('phone')))
+                ->when($request->filled('is_qualified'), fn ($query) => $query->where('is_qualified', filter_var($request->input('is_qualified'), FILTER_VALIDATE_BOOLEAN)))
+                ->when($request->filled('notification_sent'), fn ($query) => $query->where('notification_sent', filter_var($request->input('notification_sent'), FILTER_VALIDATE_BOOLEAN)))
+                ->latest('id')
+                ->get(),
         ]);
     }
 
-    public function errorLogs(string $clientId): JsonResponse
+    public function errorLogs(Request $request, string $clientId): JsonResponse
     {
         return response()->json([
             'success' => true,
             'message' => 'Error logs fetched successfully.',
-            'data' => ErrorLog::query()->where('client_id', $clientId)->latest('id')->get(),
+            'data' => ErrorLog::query()
+                ->where('client_id', $clientId)
+                ->when($request->filled('session_id'), fn ($query) => $query->where('session_id', $request->string('session_id')))
+                ->when($request->filled('lead_id'), fn ($query) => $query->where('lead_id', $request->integer('lead_id')))
+                ->when($request->filled('severity'), fn ($query) => $query->where('severity', $request->string('severity')))
+                ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
+                ->when($request->filled('workflow_id'), fn ($query) => $query->where('workflow_id', $request->string('workflow_id')))
+                ->latest('id')
+                ->get(),
         ]);
     }
 
@@ -329,6 +372,10 @@ class WorkspaceApiController extends Controller
             'lead.website_url' => ['nullable', 'string'],
             'lead.service_interest' => ['nullable', 'string'],
             'lead.custom_data' => ['nullable', 'array'],
+            'lead.is_qualified' => ['nullable', 'boolean'],
+            'lead.qualified_at' => ['nullable'],
+            'lead.notification_sent' => ['nullable', 'boolean'],
+            'lead.notification_sent_at' => ['nullable'],
             'error_log' => ['nullable', 'array'],
             'error_log.workflow_name' => ['nullable', 'string'],
             'error_log.workflow_id' => ['nullable', 'string'],

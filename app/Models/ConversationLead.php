@@ -21,6 +21,10 @@ class ConversationLead extends Model
         'service_interest',
         'custom_data',
         'emailed_at',
+        'is_qualified',
+        'qualified_at',
+        'notification_sent',
+        'notification_sent_at',
     ];
 
     protected function casts(): array
@@ -28,6 +32,10 @@ class ConversationLead extends Model
         return [
             'custom_data' => 'array',
             'emailed_at' => 'datetime',
+            'is_qualified' => 'boolean',
+            'qualified_at' => 'datetime',
+            'notification_sent' => 'boolean',
+            'notification_sent_at' => 'datetime',
         ];
     }
 }
