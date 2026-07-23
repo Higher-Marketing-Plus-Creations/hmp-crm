@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LeadSubmissionController;
 use App\Http\Controllers\Api\LeadCrudController;
 use App\Http\Controllers\Api\KnowledgeBaseController;
 use App\Http\Controllers\Api\SessionCrudController;
+use App\Http\Controllers\Api\WorkspaceApiController;
 use App\Http\Middleware\EnsureValidWebsiteApiRequest;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,22 @@ Route::apiResource('error-logs', ErrorLogController::class);
 Route::apiResource('knowledge-base', KnowledgeBaseController::class);
 Route::apiResource('leads', LeadCrudController::class);
 Route::apiResource('sessions', SessionCrudController::class);
+
+Route::prefix('workspaces/{client_id}')->group(function () {
+    Route::get('overview', [WorkspaceApiController::class, 'overview']);
+    Route::get('settings', [WorkspaceApiController::class, 'settings']);
+    Route::get('conversation-settings', [WorkspaceApiController::class, 'conversationSettings']);
+    Route::get('knowledge-base', [WorkspaceApiController::class, 'knowledgeBase']);
+    Route::get('sessions', [WorkspaceApiController::class, 'sessions']);
+    Route::get('conversations', [WorkspaceApiController::class, 'conversations']);
+    Route::get('leads', [WorkspaceApiController::class, 'leads']);
+    Route::get('error-logs', [WorkspaceApiController::class, 'errorLogs']);
+    Route::post('bootstrap', [WorkspaceApiController::class, 'bootstrap']);
+    Route::post('conversation-start', [WorkspaceApiController::class, 'conversationStart']);
+    Route::post('conversation-event', [WorkspaceApiController::class, 'conversationEvent']);
+});
+
+Route::get('workspace-api-map', [WorkspaceApiController::class, 'docs']);
 
 Route::middleware(['throttle:lead-submissions', EnsureValidWebsiteApiRequest::class])->group(function () {
     Route::options('/leads/submit', [LeadSubmissionController::class, 'preflight'])->name('api.leads.submit');

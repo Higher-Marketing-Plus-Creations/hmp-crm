@@ -1,0 +1,1404 @@
+{
+  "info": {
+    "name": "CRM API Collection",
+    "_postman_id": "f4f4bb2e-9f1a-4dcb-8af6-7a0e7a4f6f11",
+    "description": "CRUD collection for CRM API resources.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Client Settings",
+      "item": [
+        {
+          "name": "List Client Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-settings",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Client Setting",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"client_123\",\n  \"business_name\": \"Alpha Dental Clinic\",\n  \"industry\": \"Healthcare\",\n  \"assistant_name\": \"Sarah\",\n  \"primary_cta\": \"Book Appointment\",\n  \"booking_url\": \"https://example.com/book\",\n  \"tone\": \"friendly, professional, concise\",\n  \"fallback_message\": \"Sorry, I could not understand that.\",\n  \"qualification_question\": \"What service are you looking for?\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-settings",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Client Setting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-settings/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-settings",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Client Setting",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"business_name\": \"Alpha Dental Clinic Updated\",\n  \"primary_cta\": \"Call Now\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-settings/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-settings",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Client Setting",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-settings/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-settings",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Client Conversation Settings",
+      "item": [
+        {
+          "name": "List Conversation Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-conversation-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Conversation Setting",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"client_123\",\n  \"target_customer\": \"Small business owners\",\n  \"ideal_lead_description\": \"Businesses looking for website leads and automation\",\n  \"poor_fit_description\": \"People asking for unrelated technical support\",\n  \"primary_goal\": \"Generate qualified leads\",\n  \"secondary_goal\": \"Book consultations\",\n  \"main_services\": [\"Web development\", \"SEO\", \"Lead generation\"],\n  \"service_aliases\": [\"website\", \"seo\", \"marketing\"],\n  \"qualification_fields\": [\"name\", \"email\", \"phone\", \"service_interest\"],\n  \"required_handoff_fields\": [\"name\", \"phone\"],\n  \"optional_handoff_fields\": [\"budget\", \"timeline\"],\n  \"urgency_rules\": [\"If the lead wants same-day help, escalate\"],\n  \"emergency_keywords\": [\"urgent\", \"asap\", \"emergency\"],\n  \"objection_handling_notes\": [\"Explain value clearly\", \"Keep answers short\"],\n  \"trust_building_points\": [\"10+ years experience\", \"50+ clients\"],\n  \"differentiators\": [\"Fast delivery\", \"Affordable pricing\"],\n  \"booking_rules\": [\"Always confirm date and time before booking\"],\n  \"pricing_rules\": [\"Share starting price only if asked\"],\n  \"guarantee_rules\": [\"Offer revision policy\"],\n  \"human_handoff_rules\": [\"Transfer to human after 2 failed attempts\"],\n  \"refusal_rules\": [\"Do not answer outside business scope\"]\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-conversation-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation Setting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-conversation-settings",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Conversation Setting",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"primary_goal\": \"Generate qualified leads fast\",\n  \"booking_rules\": [\"Confirm slot before finalizing\"]\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-conversation-settings",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Conversation Setting",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "client-conversation-settings",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "List Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/conversations",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "conversations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"sess_001\",\n  \"lead_id\": 1,\n  \"role\": \"user\",\n  \"message\": \"I need a website for my business\",\n  \"intent\": \"lead_generation\",\n  \"page_url\": \"https://example.com/contact\",\n  \"page_title\": \"Contact Us\",\n  \"collecting_field\": \"service_interest\",\n  \"client_id\": \"client_123\",\n  \"selected_intent\": \"web_development\",\n  \"event_type\": \"message\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/conversations",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "conversations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/conversations/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "conversations",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Conversation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Updated message\",\n  \"event_type\": \"reply\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/conversations/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "conversations",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Conversation",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/conversations/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "conversations",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Logs",
+      "item": [
+        {
+          "name": "List Error Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/error-logs",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "error-logs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Error Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"client_123\",\n  \"session_id\": \"sess_001\",\n  \"lead_id\": 1,\n  \"workflow_name\": \"lead_capture\",\n  \"workflow_id\": \"wf_01\",\n  \"execution_id\": \"ex_1001\",\n  \"failed_node\": \"validate_email\",\n  \"error_message\": \"Email validation failed\",\n  \"error_stack\": \"Stack trace here\",\n  \"last_user_message\": \"My email is wrong\",\n  \"page_url\": \"https://example.com/contact\",\n  \"page_title\": \"Contact Us\",\n  \"severity\": \"error\",\n  \"status\": \"open\",\n  \"raw_error\": {\n    \"code\": 422,\n    \"details\": \"Invalid email format\"\n  }\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/error-logs",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "error-logs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Error Log",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/error-logs/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "error-logs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Error Log",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/error-logs/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "error-logs",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Error Log",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/error-logs/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "error-logs",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Knowledge Base",
+      "item": [
+        {
+          "name": "List Knowledge Base",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/knowledge-base",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "knowledge-base"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Knowledge Base",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"client_123\",\n  \"section_title\": \"Refund Policy\",\n  \"section_type\": \"policy\",\n  \"content\": \"Refunds are available within 14 days of purchase.\",\n  \"is_active\": true,\n  \"sort_order\": 1\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/knowledge-base",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "knowledge-base"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Knowledge Base",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/knowledge-base/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "knowledge-base",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Knowledge Base",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"section_title\": \"Refund Policy Updated\",\n  \"content\": \"Refunds are available within 7 days of purchase.\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/knowledge-base/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "knowledge-base",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Knowledge Base",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/knowledge-base/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "knowledge-base",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "List Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"sess_001\",\n  \"full_name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+923001234567\",\n  \"intent\": \"website_inquiry\",\n  \"source_page\": \"https://example.com/pricing\",\n  \"status\": \"new\",\n  \"notes\": \"Interested in basic package\",\n  \"client_id\": \"client_123\",\n  \"business_name\": \"John Store\",\n  \"website_url\": \"https://johnstore.com\",\n  \"service_interest\": \"Web development\",\n  \"custom_data\": {\n    \"budget\": \"500\",\n    \"timeline\": \"2 weeks\"\n  }\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Lead",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"contacted\",\n  \"notes\": \"Updated notes\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Lead",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "List Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/sessions",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "sessions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"sess_001\",\n  \"current_url\": \"https://example.com/contact\",\n  \"page_title\": \"Contact Us\",\n  \"page_summary\": \"User is asking about website services.\",\n  \"intent\": \"lead_generation\",\n  \"lead_id\": 1,\n  \"is_active\": true,\n  \"last_activity_at\": \"2026-07-18T10:00:00Z\",\n  \"client_id\": \"client_123\",\n  \"selected_intent\": \"web_development\",\n  \"last_event_type\": \"message\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/sessions",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "sessions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/sessions/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "sessions",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Session",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"intent\": \"support\",\n  \"is_active\": false\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/sessions/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "sessions",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Session",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/sessions/1",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "sessions",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workspace APIs",
+      "item": [
+        {
+          "name": "Workspace API Map",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspace-api-map",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspace-api-map"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/overview",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "overview"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/settings",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Conversation Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/conversation-settings",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "conversation-settings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Knowledge Base",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/knowledge-base",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "knowledge-base"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/sessions",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "sessions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/conversations",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "conversations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/leads",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "leads"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Workspace Error Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/error-logs",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "error-logs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Bootstrap Workspace",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_settings\": {\n    \"business_name\": \"Alpha Dental Clinic\",\n    \"industry\": \"Healthcare\",\n    \"assistant_name\": \"Sarah\",\n    \"primary_cta\": \"Book Appointment\",\n    \"booking_url\": \"https://example.com/book\",\n    \"tone\": \"friendly, professional, concise\",\n    \"fallback_message\": \"Sorry, I could not understand that.\",\n    \"qualification_question\": \"What service are you looking for?\",\n    \"is_active\": true\n  },\n  \"client_conversation_settings\": {\n    \"target_customer\": \"Small business owners\",\n    \"ideal_lead_description\": \"Businesses looking for website leads and automation\",\n    \"poor_fit_description\": \"People asking for unrelated technical support\",\n    \"primary_goal\": \"Generate qualified leads\",\n    \"secondary_goal\": \"Book consultations\"\n  },\n  \"knowledge_base\": [\n    {\n      \"section_title\": \"Refund Policy\",\n      \"section_type\": \"policy\",\n      \"content\": \"Refunds are available within 14 days of purchase.\",\n      \"is_active\": true,\n      \"sort_order\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/bootstrap",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "bootstrap"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Start Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session\": {\n    \"session_id\": \"sess_001\",\n    \"current_url\": \"https://example.com/contact\",\n    \"page_title\": \"Contact Us\",\n    \"page_summary\": \"User is asking about website services.\",\n    \"intent\": \"lead_generation\",\n    \"is_active\": true,\n    \"last_activity_at\": \"2026-07-23T10:00:00Z\",\n    \"selected_intent\": \"web_development\",\n    \"last_event_type\": \"session_started\"\n  },\n  \"conversation\": {\n    \"role\": \"user\",\n    \"message\": \"I need a website for my business\",\n    \"intent\": \"lead_generation\",\n    \"page_url\": \"https://example.com/contact\",\n    \"page_title\": \"Contact Us\",\n    \"collecting_field\": \"service_interest\",\n    \"selected_intent\": \"web_development\",\n    \"event_type\": \"message\"\n  }\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/conversation-start",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "conversation-start"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Conversation Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation\": {\n    \"session_id\": \"sess_001\",\n    \"lead_id\": 1,\n    \"role\": \"user\",\n    \"message\": \"My budget is around $500\",\n    \"intent\": \"pricing_query\",\n    \"page_url\": \"https://example.com/pricing\",\n    \"page_title\": \"Pricing\",\n    \"collecting_field\": \"budget\",\n    \"selected_intent\": \"budget_check\",\n    \"event_type\": \"message\"\n  },\n  \"lead\": {\n    \"full_name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"phone\": \"+923001234567\",\n    \"intent\": \"website_inquiry\",\n    \"source_page\": \"https://example.com/pricing\",\n    \"status\": \"new\",\n    \"notes\": \"Interested in basic package\",\n    \"business_name\": \"John Store\",\n    \"website_url\": \"https://johnstore.com\",\n    \"service_interest\": \"Web development\",\n    \"custom_data\": {\n      \"budget\": \"500\",\n      \"timeline\": \"2 weeks\"\n    }\n  },\n  \"error_log\": {\n    \"workflow_name\": \"lead_capture\",\n    \"workflow_id\": \"wf_01\",\n    \"execution_id\": \"ex_1001\",\n    \"failed_node\": \"validate_email\",\n    \"error_message\": \"Email validation failed\",\n    \"error_stack\": \"Stack trace here\",\n    \"last_user_message\": \"My email is wrong\",\n    \"page_url\": \"https://example.com/pricing\",\n    \"page_title\": \"Pricing\",\n    \"severity\": \"error\",\n    \"status\": \"open\",\n    \"raw_error\": {\n      \"code\": 422,\n      \"details\": \"Invalid email format\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/conversation-event",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "conversation-event"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
