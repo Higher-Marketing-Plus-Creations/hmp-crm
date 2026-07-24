@@ -199,7 +199,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"client_id\": \"client_123\",\n  \"target_customer\": \"Small business owners\",\n  \"ideal_lead_description\": \"Businesses looking for website leads and automation\",\n  \"poor_fit_description\": \"People asking for unrelated technical support\",\n  \"primary_goal\": \"Generate qualified leads\",\n  \"secondary_goal\": \"Book consultations\",\n  \"main_services\": [\"Web development\", \"SEO\", \"Lead generation\"],\n  \"service_aliases\": [\"website\", \"seo\", \"marketing\"],\n  \"qualification_fields\": [\"name\", \"email\", \"phone\", \"service_interest\"],\n  \"required_handoff_fields\": [\"name\", \"phone\"],\n  \"optional_handoff_fields\": [\"budget\", \"timeline\"],\n  \"urgency_rules\": [\"If the lead wants same-day help, escalate\"],\n  \"emergency_keywords\": [\"urgent\", \"asap\", \"emergency\"],\n  \"objection_handling_notes\": [\"Explain value clearly\", \"Keep answers short\"],\n  \"trust_building_points\": [\"10+ years experience\", \"50+ clients\"],\n  \"differentiators\": [\"Fast delivery\", \"Affordable pricing\"],\n  \"booking_rules\": [\"Always confirm date and time before booking\"],\n  \"pricing_rules\": [\"Share starting price only if asked\"],\n  \"guarantee_rules\": [\"Offer revision policy\"],\n  \"human_handoff_rules\": [\"Transfer to human after 2 failed attempts\"],\n  \"refusal_rules\": [\"Do not answer outside business scope\"]\n}"
+          "raw": "{\n  \"client_id\": \"client_123\",\n  \"business_name\": \"Alpha Dental Clinic\",\n  \"short_name\": \"Alpha Dental\",\n  \"industry_niche\": \"Healthcare\",\n  \"website_url\": \"https://example.com\",\n  \"primary_market\": \"United States\",\n  \"assistant_name\": \"Sarah\",\n  \"target_customer\": \"Small business owners\",\n  \"ideal_lead_description\": \"Businesses looking for website leads and automation\",\n  \"poor_fit_description\": \"People asking for unrelated technical support\",\n  \"primary_goal\": \"Generate qualified leads\",\n  \"secondary_goal\": \"Book consultations\",\n  \"main_services\": [\"Web development\", \"SEO\", \"Lead generation\"],\n  \"service_aliases\": [\"website\", \"seo\", \"marketing\"],\n  \"services_not_offered\": [\"phone repair\", \"game hacking\"],\n  \"lead_scoring_rules\": [\"If budget is above 1000, score higher\"],\n  \"appointment_booking_flow\": [\"Ask preferred date\", \"Confirm time\", \"Send calendar link\"],\n  \"conversation_style_rules\": [\"Keep replies short\", \"Be friendly\"],\n  \"first_message\": \"Hi, how can I help you today?\",\n  \"closing_messages\": [\"Thanks for reaching out\", \"We will contact you soon\"],\n  \"kb_categories\": [\"pricing\", \"services\"],\n  \"faq_categories\": [\"general\", \"billing\"],\n  \"reasoning_rules\": [\"Prefer the most relevant service\"],\n  \"handoff_summary_template\": \"Lead summary: {summary}\",\n  \"tone_examples\": [\"friendly and professional\"],\n  \"preferred_phrases\": [\"happy to help\"],\n  \"forbidden_phrases\": [\"guaranteed results\"],\n  \"conversation_examples\": [\n    {\n      \"role\": \"user\",\n      \"message\": \"I need a website\",\n      \"expected_reply\": \"Sure, I can help with that.\"\n    }\n  ],\n  \"qualification_fields\": [\"name\", \"email\", \"phone\", \"service_interest\"],\n  \"required_handoff_fields\": [\"name\", \"phone\"],\n  \"optional_handoff_fields\": [\"budget\", \"timeline\"],\n  \"urgency_rules\": [\"If the lead wants same-day help, escalate\"],\n  \"emergency_keywords\": [\"urgent\", \"asap\", \"emergency\"],\n  \"objection_handling_notes\": [\"Explain value clearly\", \"Keep answers short\"],\n  \"trust_building_points\": [\"10+ years experience\", \"50+ clients\"],\n  \"differentiators\": [\"Fast delivery\", \"Affordable pricing\"],\n  \"booking_rules\": [\"Always confirm date and time before booking\"],\n  \"pricing_rules\": [\"Share starting price only if asked\"],\n  \"guarantee_rules\": [\"Offer revision policy\"],\n  \"human_handoff_rules\": [\"Transfer to human after 2 failed attempts\"],\n  \"refusal_rules\": [\"Do not answer outside business scope\"]\n}"
             },
             "url": {
               "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings",
@@ -258,7 +258,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"primary_goal\": \"Generate qualified leads fast\",\n  \"booking_rules\": [\"Confirm slot before finalizing\"]\n}"
+          "raw": "{\n  \"primary_goal\": \"Generate qualified leads fast\",\n  \"booking_rules\": [\"Confirm slot before finalizing\"],\n  \"conversation_examples\": [\n    {\n      \"role\": \"assistant\",\n      \"message\": \"Could you share your budget?\",\n      \"expected_reply\": \"We can discuss the best option.\"\n    }\n  ]\n}"
             },
             "url": {
               "raw": "https://crm.highermarketingplusprojects.com/api/client-conversation-settings/1",
@@ -795,7 +795,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"session_id\": \"sess_001\",\n  \"full_name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+923001234567\",\n  \"intent\": \"website_inquiry\",\n  \"source_page\": \"https://example.com/pricing\",\n  \"status\": \"new\",\n  \"notes\": \"Interested in basic package\",\n  \"client_id\": \"client_123\",\n  \"business_name\": \"John Store\",\n  \"website_url\": \"https://johnstore.com\",\n  \"service_interest\": \"Web development\",\n  \"custom_data\": {\n    \"budget\": \"500\",\n    \"timeline\": \"2 weeks\"\n  }\n}"
+              "raw": "{\n  \"session_id\": \"sess_001\",\n  \"full_name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+923001234567\",\n  \"intent\": \"website_inquiry\",\n  \"source_page\": \"https://example.com/pricing\",\n  \"status\": \"new\",\n  \"notes\": \"Interested in basic package\",\n  \"client_id\": \"client_123\",\n  \"business_name\": \"John Store\",\n  \"website_url\": \"https://johnstore.com\",\n  \"service_interest\": \"Web development\",\n  \"custom_data\": {\n    \"budget\": \"500\",\n    \"timeline\": \"2 weeks\"\n  },\n  \"emailed_at\": \"2026-07-23T10:00:00Z\",\n  \"is_qualified\": true,\n  \"qualified_at\": \"2026-07-23T10:05:00Z\",\n  \"notification_sent\": false,\n  \"notification_sent_at\": null\n}"
             },
             "url": {
               "raw": "https://crm.highermarketingplusprojects.com/api/leads",
@@ -854,7 +854,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"contacted\",\n  \"notes\": \"Updated notes\"\n}"
+              "raw": "{\n  \"status\": \"contacted\",\n  \"notes\": \"Updated notes\",\n  \"is_qualified\": true,\n  \"qualified_at\": \"2026-07-23T11:00:00Z\",\n  \"notification_sent\": true,\n  \"notification_sent_at\": \"2026-07-23T11:02:00Z\"\n}"
             },
             "url": {
               "raw": "https://crm.highermarketingplusprojects.com/api/leads/1",
@@ -1073,7 +1073,8 @@
               "path": [
                 "api",
                 "workspace-api-map"
-              ]
+              ],
+              "query": []
             }
           }
         },
@@ -1367,6 +1368,14 @@
                 {
                   "key": "phone",
                   "value": "+923001234567"
+                },
+                {
+                  "key": "is_qualified",
+                  "value": "true"
+                },
+                {
+                  "key": "notification_sent",
+                  "value": "false"
                 }
               ]
             }
@@ -1523,7 +1532,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"conversation\": {\n    \"session_id\": \"sess_001\",\n    \"lead_id\": 1,\n    \"role\": \"user\",\n    \"message\": \"My budget is around $500\",\n    \"intent\": \"pricing_query\",\n    \"page_url\": \"https://example.com/pricing\",\n    \"page_title\": \"Pricing\",\n    \"collecting_field\": \"budget\",\n    \"selected_intent\": \"budget_check\",\n    \"event_type\": \"message\"\n  },\n  \"lead\": {\n    \"full_name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"phone\": \"+923001234567\",\n    \"intent\": \"website_inquiry\",\n    \"source_page\": \"https://example.com/pricing\",\n    \"status\": \"new\",\n    \"notes\": \"Interested in basic package\",\n    \"business_name\": \"John Store\",\n    \"website_url\": \"https://johnstore.com\",\n    \"service_interest\": \"Web development\",\n    \"custom_data\": {\n      \"budget\": \"500\",\n      \"timeline\": \"2 weeks\"\n    }\n  },\n  \"error_log\": {\n    \"workflow_name\": \"lead_capture\",\n    \"workflow_id\": \"wf_01\",\n    \"execution_id\": \"ex_1001\",\n    \"failed_node\": \"validate_email\",\n    \"error_message\": \"Email validation failed\",\n    \"error_stack\": \"Stack trace here\",\n    \"last_user_message\": \"My email is wrong\",\n    \"page_url\": \"https://example.com/pricing\",\n    \"page_title\": \"Pricing\",\n    \"severity\": \"error\",\n    \"status\": \"open\",\n    \"raw_error\": {\n      \"code\": 422,\n      \"details\": \"Invalid email format\"\n    }\n  }\n}"
+              "raw": "{\n  \"conversation\": {\n    \"session_id\": \"sess_001\",\n    \"lead_id\": 1,\n    \"role\": \"user\",\n    \"message\": \"My budget is around $500\",\n    \"intent\": \"pricing_query\",\n    \"page_url\": \"https://example.com/pricing\",\n    \"page_title\": \"Pricing\",\n    \"collecting_field\": \"budget\",\n    \"selected_intent\": \"budget_check\",\n    \"event_type\": \"message\"\n  },\n  \"lead\": {\n    \"full_name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"phone\": \"+923001234567\",\n    \"intent\": \"website_inquiry\",\n    \"source_page\": \"https://example.com/pricing\",\n    \"status\": \"new\",\n    \"notes\": \"Interested in basic package\",\n    \"business_name\": \"John Store\",\n    \"website_url\": \"https://johnstore.com\",\n    \"service_interest\": \"Web development\",\n    \"custom_data\": {\n      \"budget\": \"500\",\n      \"timeline\": \"2 weeks\"\n    },\n    \"is_qualified\": true,\n    \"qualified_at\": \"2026-07-23T10:05:00Z\",\n    \"notification_sent\": false,\n    \"notification_sent_at\": null\n  },\n  \"error_log\": {\n    \"workflow_name\": \"lead_capture\",\n    \"workflow_id\": \"wf_01\",\n    \"execution_id\": \"ex_1001\",\n    \"failed_node\": \"validate_email\",\n    \"error_message\": \"Email validation failed\",\n    \"error_stack\": \"Stack trace here\",\n    \"last_user_message\": \"My email is wrong\",\n    \"page_url\": \"https://example.com/pricing\",\n    \"page_title\": \"Pricing\",\n    \"severity\": \"error\",\n    \"status\": \"open\",\n    \"raw_error\": {\n      \"code\": 422,\n      \"details\": \"Invalid email format\"\n    }\n  }\n}"
             },
             "url": {
               "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/conversation-event",

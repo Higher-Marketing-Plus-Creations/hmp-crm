@@ -47,18 +47,21 @@ class WorkspaceApiController extends Controller
                     'path' => '/api/workspaces/{client_id}/conversation-settings',
                     'tables' => ['client_conversation_settings'],
                     'purpose' => 'AI conversation rules and behavior settings.',
+                    'query_params' => ['client_id'],
                 ],
                 'knowledge_base' => [
                     'method' => 'GET',
                     'path' => '/api/workspaces/{client_id}/knowledge-base',
                     'tables' => ['knowledge_base'],
                     'purpose' => 'Client knowledge articles and references.',
+                    'query_params' => ['section_type', 'section_title'],
                 ],
                 'sessions' => [
                     'method' => 'GET',
                     'path' => '/api/workspaces/{client_id}/sessions',
                     'tables' => ['conversation_sessions'],
                     'purpose' => 'Conversation session records.',
+                    'query_params' => ['session_id', 'lead_id', 'intent', 'is_active'],
                 ],
                 'conversations' => [
                     'method' => 'GET',
