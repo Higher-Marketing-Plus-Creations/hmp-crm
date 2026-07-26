@@ -1178,6 +1178,39 @@
           }
         },
         {
+          "name": "Brain Context",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/workspaces/client_123/brain-context",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "workspaces",
+                "client_123",
+                "brain-context"
+              ],
+              "query": [
+                {
+                  "key": "client_id",
+                  "value": "client_123"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Workspace Knowledge Base",
           "request": {
             "method": "GET",
@@ -1264,7 +1297,8 @@
                   "value": "true"
                 }
               ]
-            }
+            },
+            "description": "If session_id is supplied, returns a single session object or {} when not found."
           }
         },
         {
@@ -1378,7 +1412,8 @@
                   "value": "false"
                 }
               ]
-            }
+            },
+            "description": "If session_id is supplied, returns a single lead object or {} when not found."
           }
         },
         {

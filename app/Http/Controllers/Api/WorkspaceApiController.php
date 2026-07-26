@@ -49,6 +49,17 @@ class WorkspaceApiController extends Controller
                     'purpose' => 'AI conversation rules and behavior settings.',
                     'query_params' => ['client_id'],
                 ],
+                'brain_context' => [
+                    'method' => 'GET',
+                    'path' => '/api/workspaces/{client_id}/brain-context',
+                    'tables' => [
+                        'client_settings',
+                        'client_conversation_settings',
+                        'knowledge_base',
+                    ],
+                    'purpose' => 'Combined context payload for Brain V2 runtime.',
+                    'query_params' => ['client_id'],
+                ],
                 'knowledge_base' => [
                     'method' => 'GET',
                     'path' => '/api/workspaces/{client_id}/knowledge-base',
@@ -155,6 +166,27 @@ class WorkspaceApiController extends Controller
         ]);
     }
 
+    public function brainContext(string $clientId): JsonResponse
+    {
+        $clientSettings = ClientSetting::query()->where('client_id', $clientId)->first();
+        $conversationSettings = ClientConversationSetting::query()->where('client_id', $clientId)->first();
+        $knowledgeBase = KnowledgeBase::query()
+            ->where('client_id', $clientId)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Brain context fetched successfully.',
+            'data' => [
+                'client_settings' => $clientSettings,
+                'conversation_settings' => $conversationSettings,
+                'knowledge_base' => $knowledgeBase,
+            ],
+        ]);
+    }
+
     public function knowledgeBase(string $clientId): JsonResponse
     {
         $request = request();
@@ -173,6 +205,19 @@ class WorkspaceApiController extends Controller
 
     public function sessions(Request $request, string $clientId): JsonResponse
     {
+        if ($request->filled('session_id')) {
+            $session = ConversationSession::query()
+                ->where('client_id', $clientId)
+                ->where('session_id', $request->string('session_id'))
+                ->first();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Session fetched successfully.',
+                'data' => $session ?? (object) [],
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Sessions fetched successfully.',
@@ -206,6 +251,19 @@ class WorkspaceApiController extends Controller
 
     public function leads(Request $request, string $clientId): JsonResponse
     {
+        if ($request->filled('session_id')) {
+            $lead = ConversationLead::query()
+                ->where('client_id', $clientId)
+                ->where('session_id', $request->string('session_id'))
+                ->first();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lead fetched successfully.',
+                'data' => $lead ?? (object) [],
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Leads fetched successfully.',

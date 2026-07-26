@@ -34,6 +34,7 @@ Route::prefix('workspaces/{client_id}')->group(function () {
     Route::get('overview', [WorkspaceApiController::class, 'overview']);
     Route::get('settings', [WorkspaceApiController::class, 'settings']);
     Route::get('conversation-settings', [WorkspaceApiController::class, 'conversationSettings']);
+    Route::get('brain-context', [WorkspaceApiController::class, 'brainContext']);
     Route::get('knowledge-base', [WorkspaceApiController::class, 'knowledgeBase']);
     Route::get('sessions', [WorkspaceApiController::class, 'sessions']);
     Route::get('conversations', [WorkspaceApiController::class, 'conversations']);
