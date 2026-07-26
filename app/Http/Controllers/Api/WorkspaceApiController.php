@@ -177,13 +177,9 @@ class WorkspaceApiController extends Controller
             ->get();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Brain context fetched successfully.',
-            'data' => [
-                'client_settings' => $clientSettings,
-                'conversation_settings' => $conversationSettings,
-                'knowledge_base' => $knowledgeBase,
-            ],
+            'client_settings' => $clientSettings?->toArray() ?? (object) [],
+            'conversation_settings' => $conversationSettings?->toArray() ?? (object) [],
+            'knowledge_base' => $knowledgeBase->map->toArray()->values(),
         ]);
     }
 
@@ -211,11 +207,7 @@ class WorkspaceApiController extends Controller
                 ->where('session_id', $request->string('session_id'))
                 ->first();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Session fetched successfully.',
-                'data' => $session ?? (object) [],
-            ]);
+            return response()->json($session ? $session->toArray() : new \stdClass());
         }
 
         return response()->json([
@@ -257,11 +249,7 @@ class WorkspaceApiController extends Controller
                 ->where('session_id', $request->string('session_id'))
                 ->first();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Lead fetched successfully.',
-                'data' => $lead ?? (object) [],
-            ]);
+            return response()->json($lead ? $lead->toArray() : new \stdClass());
         }
 
         return response()->json([
