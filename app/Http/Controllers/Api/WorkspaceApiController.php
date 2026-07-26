@@ -176,6 +176,10 @@ class WorkspaceApiController extends Controller
             ->orderBy('id')
             ->get();
 
+        if (! $clientSettings && ! $conversationSettings && $knowledgeBase->isEmpty()) {
+            return response()->json(new \stdClass());
+        }
+
         return response()->json([
             'client_settings' => $clientSettings?->toArray() ?? (object) [],
             'conversation_settings' => $conversationSettings?->toArray() ?? (object) [],
