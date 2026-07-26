@@ -7,6 +7,44 @@
   },
   "item": [
     {
+      "name": "Utilities",
+      "item": [
+        {
+          "name": "API Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/test",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "test"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Client Settings",
       "item": [
         {
@@ -1588,6 +1626,45 @@
                   "key": "client_id",
                   "value": "client_123"
                 }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lead Submission",
+      "item": [
+        {
+          "name": "Submit Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"website_id\": 1,\n  \"website_name\": \"Higher Marketing Plus\",\n  \"page_url\": \"https://example.com/contact\",\n  \"form_name\": \"Contact Form\",\n  \"visitor_name\": \"John Smith\",\n  \"visitor_email\": \"john@example.com\",\n  \"visitor_phone\": \"+1234567890\",\n  \"message\": \"I need a website quote.\",\n  \"form_data\": {\n    \"service\": \"website\",\n    \"budget\": \"1000\"\n  },\n  \"ip_address\": \"127.0.0.1\",\n  \"user_agent\": \"Mozilla/5.0\",\n  \"referrer\": \"https://example.com/\",\n  \"status\": \"new\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/submit",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "submit"
               ]
             }
           }
