@@ -1387,9 +1387,18 @@
                 {
                   "key": "role",
                   "value": "user"
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
                 }
               ]
-            }
+            },
+            "description": "Supports order=asc|desc and limit=1..500. Defaults to desc and 20."
           }
         },
         {

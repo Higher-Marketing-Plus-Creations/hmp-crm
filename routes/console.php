@@ -8,10 +8,10 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('monitor:websites --trigger=scheduled')
-    ->everyFiveMinutes()
-    ->withoutOverlapping();
+// Schedule::command('monitor:websites --trigger=scheduled')
+//     ->everyFiveMinutes()
+//     ->withoutOverlapping();
 
-Schedule::command('monitor:websites --trigger=daily_ssl_audit')
-    ->dailyAt('08:00')
+Schedule::command('monitor:websites --trigger=per_minute')
+    ->everyMinute()
     ->withoutOverlapping();

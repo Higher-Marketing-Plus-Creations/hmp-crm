@@ -79,7 +79,7 @@ class WorkspaceApiController extends Controller
                     'path' => '/api/workspaces/{client_id}/conversations',
                     'tables' => ['conversations'],
                     'purpose' => 'Message log tied to sessions/leads.',
-                    'query_params' => ['session_id', 'lead_id', 'event_type', 'selected_intent', 'role'],
+                    'query_params' => ['session_id', 'lead_id', 'event_type', 'selected_intent', 'role', 'order', 'limit'],
                 ],
                 'leads' => [
                     'method' => 'GET',
@@ -230,6 +230,9 @@ class WorkspaceApiController extends Controller
 
     public function conversations(Request $request, string $clientId): JsonResponse
     {
+        $order = strtolower((string) $request->input('order', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $limit = max(1, min((int) $request->input('limit', 20), 500));
+
         return response()->json([
             'success' => true,
             'message' => 'Conversations fetched successfully.',
@@ -240,7 +243,8 @@ class WorkspaceApiController extends Controller
                 ->when($request->filled('event_type'), fn ($query) => $query->where('event_type', $request->string('event_type')))
                 ->when($request->filled('selected_intent'), fn ($query) => $query->where('selected_intent', $request->string('selected_intent')))
                 ->when($request->filled('role'), fn ($query) => $query->where('role', $request->string('role')))
-                ->latest('id')
+                ->orderBy('id', $order)
+                ->limit($limit)
                 ->get(),
         ]);
     }
