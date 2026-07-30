@@ -100,32 +100,35 @@ class LeadCrudController extends Controller
                 $lead = ConversationLead::create($payload);
             }
 
-            ConversationSession::query()
+            $sessionLinked = false;
+            $sessionLinked = ConversationSession::query()
                 ->where('client_id', $data['client_id'])
                 ->where('session_id', $data['session_id'])
                 ->update([
                     'lead_id' => $lead->id,
-                    'updated_at' => now(),
                 ]);
 
-            Conversation::query()
+            $conversationsUpdated = DB::table('conversations')
                 ->where('client_id', $data['client_id'])
                 ->where('session_id', $data['session_id'])
                 ->update([
                     'lead_id' => $lead->id,
-                    'updated_at' => now(),
                 ]);
 
             return [
                 'action' => $action,
                 'lead' => $lead->fresh(),
+                'session_linked' => (bool) $sessionLinked,
+                'conversations_updated' => $conversationsUpdated,
             ];
         });
 
         return response()->json([
             'success' => true,
             'action' => $result['action'],
-            'data' => $result['lead'],
+            'lead' => $result['lead'],
+            'session_linked' => $result['session_linked'],
+            'conversations_updated' => $result['conversations_updated'],
         ], $result['action'] === 'created' ? 201 : 200);
     }
 
