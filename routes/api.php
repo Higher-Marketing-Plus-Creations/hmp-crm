@@ -29,6 +29,9 @@ Route::apiResource('error-logs', ErrorLogController::class);
 Route::apiResource('knowledge-base', KnowledgeBaseController::class);
 Route::apiResource('leads', LeadCrudController::class);
 Route::apiResource('sessions', SessionCrudController::class);
+Route::post('leads/upsert', [LeadCrudController::class, 'upsert']);
+Route::post('leads/{lead}/qualify', [LeadCrudController::class, 'qualify']);
+Route::post('leads/{lead}/notification-sent', [LeadCrudController::class, 'notificationSent']);
 
 Route::prefix('workspaces/{client_id}')->group(function () {
     Route::get('overview', [WorkspaceApiController::class, 'overview']);

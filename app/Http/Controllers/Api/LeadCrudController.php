@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ConversationLead;
+use App\Models\Conversation;
+use App\Models\ConversationSession;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -62,6 +65,99 @@ class LeadCrudController extends Controller
         ]);
     }
 
+    public function upsert(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'client_id' => ['required', 'string'],
+            'session_id' => ['required', 'string'],
+            'intent' => ['nullable', 'string'],
+            'source_page' => ['nullable', 'string'],
+            'full_name' => ['nullable', 'string'],
+            'email' => ['nullable', 'string'],
+            'phone' => ['nullable', 'string'],
+            'business_name' => ['nullable', 'string'],
+            'website_url' => ['nullable', 'string'],
+            'service_interest' => ['nullable', 'string'],
+            'custom_data' => ['nullable', 'array'],
+        ]);
+
+        $result = DB::transaction(function () use ($data) {
+            $lead = ConversationLead::query()
+                ->where('client_id', $data['client_id'])
+                ->where('session_id', $data['session_id'])
+                ->first();
+
+            $action = $lead ? 'updated' : 'created';
+
+            $payload = array_filter($data, static fn ($value) => $value !== null);
+
+            if ($lead) {
+                $payload['custom_data'] = $this->mergeCustomData($lead->custom_data ?? [], $data['custom_data'] ?? []);
+                $lead->fill($payload)->save();
+                $lead = $lead->fresh();
+            } else {
+                $payload['custom_data'] = $data['custom_data'] ?? [];
+                $lead = ConversationLead::create($payload);
+            }
+
+            ConversationSession::query()
+                ->where('client_id', $data['client_id'])
+                ->where('session_id', $data['session_id'])
+                ->update([
+                    'lead_id' => $lead->id,
+                    'updated_at' => now(),
+                ]);
+
+            Conversation::query()
+                ->where('client_id', $data['client_id'])
+                ->where('session_id', $data['session_id'])
+                ->update([
+                    'lead_id' => $lead->id,
+                    'updated_at' => now(),
+                ]);
+
+            return [
+                'action' => $action,
+                'lead' => $lead->fresh(),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'action' => $result['action'],
+            'data' => $result['lead'],
+        ], $result['action'] === 'created' ? 201 : 200);
+    }
+
+    public function qualify(Request $request, ConversationLead $lead): JsonResponse
+    {
+        $lead->update([
+            'is_qualified' => true,
+            'qualified_at' => $lead->qualified_at ?? now(),
+        ]);
+
+        return response()->json([
+            'lead_id' => $lead->id,
+            'is_qualified' => true,
+            'qualified_at' => optional($lead->fresh()->qualified_at)?->toISOString(),
+            'should_send_notification' => ! (bool) $lead->notification_sent,
+        ]);
+    }
+
+    public function notificationSent(Request $request, ConversationLead $lead): JsonResponse
+    {
+        $lead->update([
+            'notification_sent' => true,
+            'notification_sent_at' => $lead->notification_sent_at ?? now(),
+        ]);
+
+        return response()->json([
+            'lead_id' => $lead->id,
+            'notification_sent' => true,
+            'notification_sent_at' => optional($lead->fresh()->notification_sent_at)?->toISOString(),
+        ]);
+    }
+
     private function validatePayload(Request $request, bool $partial): array
     {
         $rules = [
@@ -86,5 +182,10 @@ class LeadCrudController extends Controller
         ];
 
         return $request->validate($rules);
+    }
+
+    private function mergeCustomData(array $existing, array $incoming): array
+    {
+        return array_replace_recursive($existing, $incoming);
     }
 }

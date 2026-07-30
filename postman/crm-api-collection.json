@@ -851,6 +851,102 @@
           }
         },
         {
+          "name": "Upsert Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"client_123\",\n  \"session_id\": \"sess_001\",\n  \"intent\": \"general\",\n  \"source_page\": \"https://example.com/contact\",\n  \"full_name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+923001234567\",\n  \"business_name\": \"John Store\",\n  \"website_url\": \"https://johnstore.com\",\n  \"service_interest\": \"website\",\n  \"custom_data\": {\n    \"budget\": \"$2000\",\n    \"timeline\": \"next month\"\n  }\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/upsert",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "upsert"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Qualify Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/1/qualify",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "1",
+                "qualify"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Lead Notification Sent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/leads/1/notification-sent",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "leads",
+                "1",
+                "notification-sent"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          }
+        },
+        {
           "name": "Get Lead",
           "request": {
             "method": "GET",
