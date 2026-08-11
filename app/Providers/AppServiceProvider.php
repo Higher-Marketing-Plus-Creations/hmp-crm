@@ -32,5 +32,16 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perMinute(120)->by((string) $request->header('X-API-KEY')),
             ];
         });
+
+        RateLimiter::for('realtime-session', function (Request $request) {
+            $clientId = (string) $request->input('client_id');
+            $sessionId = (string) $request->input('session_id');
+
+            return [
+                Limit::perMinute(10)->by($request->ip()),
+                Limit::perMinute(20)->by($clientId !== '' ? $clientId : $request->ip()),
+                Limit::perMinute(5)->by($sessionId !== '' ? $sessionId : $request->ip()),
+            ];
+        });
     }
 }

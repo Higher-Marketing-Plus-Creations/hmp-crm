@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ErrorLogController;
 use App\Http\Controllers\Api\LeadSubmissionController;
 use App\Http\Controllers\Api\LeadCrudController;
 use App\Http\Controllers\Api\KnowledgeBaseController;
+use App\Http\Controllers\Api\RealtimeSessionController;
 use App\Http\Controllers\Api\SessionCrudController;
 use App\Http\Controllers\Api\WorkspaceApiController;
 use App\Http\Middleware\EnsureValidWebsiteApiRequest;
@@ -32,6 +33,7 @@ Route::apiResource('sessions', SessionCrudController::class);
 Route::post('leads/upsert', [LeadCrudController::class, 'upsert']);
 Route::post('leads/{lead}/qualify', [LeadCrudController::class, 'qualify']);
 Route::post('leads/{lead}/notification-sent', [LeadCrudController::class, 'notificationSent']);
+Route::middleware('throttle:realtime-session')->post('realtime/session', [RealtimeSessionController::class, 'store']);
 
 Route::prefix('workspaces/{client_id}')->group(function () {
     Route::get('overview', [WorkspaceApiController::class, 'overview']);
