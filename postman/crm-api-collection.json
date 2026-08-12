@@ -1654,6 +1654,41 @@
           }
         },
         {
+          "name": "Create Realtime Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_id\": \"hmp-agency-website\",\n  \"session_id\": \"existing-hmp-session-id\",\n  \"current_url\": \"https://example.com/contact\",\n  \"page_title\": \"Contact Us\"\n}"
+            },
+            "url": {
+              "raw": "https://crm.highermarketingplusprojects.com/api/realtime/session",
+              "protocol": "https",
+              "host": [
+                "crm",
+                "highermarketingplusprojects",
+                "com"
+              ],
+              "path": [
+                "api",
+                "realtime",
+                "session"
+              ]
+            },
+            "description": "Creates a short-lived OpenAI Realtime client secret for the widget."
+          }
+        },
+        {
           "name": "Start Conversation",
           "request": {
             "method": "POST",

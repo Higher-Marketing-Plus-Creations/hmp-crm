@@ -24,6 +24,7 @@ class RealtimeSessionController extends Controller
         $apiKey = (string) config('services.openai.api_key');
         $model = (string) config('services.openai.realtime_model');
 
+
         if ($apiKey === '' || $model === '') {
             return response()->json([
                 'success' => false,
@@ -56,6 +57,7 @@ class RealtimeSessionController extends Controller
             }
 
             $json = $response->json();
+
             $clientSecret = data_get($json, 'value');
             $expiresAt = data_get($json, 'expires_at');
             $realtimeSessionId = data_get($json, 'session.id');
@@ -74,7 +76,6 @@ class RealtimeSessionController extends Controller
                     'realtime_session_id' => $realtimeSessionId,
                 ],
             ]);
-
             return response()->json([
                 'success' => true,
                 'data' => [
