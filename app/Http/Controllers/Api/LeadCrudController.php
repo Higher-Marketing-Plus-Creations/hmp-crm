@@ -189,6 +189,15 @@ class LeadCrudController extends Controller
 
     private function mergeCustomData(array $existing, array $incoming): array
     {
-        return array_replace_recursive($existing, $incoming);
+        foreach ($incoming as $key => $value) {
+            if (is_array($value) && array_key_exists($key, $existing) && is_array($existing[$key])) {
+                $existing[$key] = $this->mergeCustomData($existing[$key], $value);
+                continue;
+            }
+
+            $existing[$key] = $value;
+        }
+
+        return $existing;
     }
 }
