@@ -190,6 +190,12 @@ class LeadCrudController extends Controller
     private function mergeCustomData(array $existing, array $incoming): array
     {
         foreach ($incoming as $key => $value) {
+            if (is_array($value) && $value === []) {
+                $existing[$key] = [];
+
+                continue;
+            }
+
             if (is_array($value) && array_key_exists($key, $existing) && is_array($existing[$key])) {
                 $existing[$key] = $this->mergeCustomData($existing[$key], $value);
                 continue;
